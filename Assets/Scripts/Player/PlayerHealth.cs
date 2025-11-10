@@ -32,8 +32,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     void Die()
     {
         Debug.Log("Player Died!");
-        // TODO: ゲームオーバー画面やリスタート処理を追加
-        // とりあえず一旦停止する
-        Time.timeScale = 0f;
+        GameManager.Instance?.EndGame();
+    }
+
+    public void ResetHealth()
+    {
+        currentHP = maxHP;
+        HealthChanged?.Invoke(currentHP, maxHP);
     }
 }
