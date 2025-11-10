@@ -75,8 +75,6 @@ desktop.ini
 
 # ========== Optional (個人開発用に追加推奨) ==========
 # PlayFab / Private API Keys（もし追加したら）
-*.json
-*.config
 *.key
 *.pem
 
