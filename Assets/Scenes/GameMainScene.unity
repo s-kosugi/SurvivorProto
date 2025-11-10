@@ -515,6 +515,7 @@ GameObject:
   - component: {fileID: 1374674985}
   - component: {fileID: 1374674987}
   - component: {fileID: 1374674988}
+  - component: {fileID: 1374674989}
   m_Layer: 6
   m_Name: TempPlayer
   m_TagString: Player
@@ -689,6 +690,19 @@ MonoBehaviour:
   bulletPrefab: {fileID: 3712233948235027245, guid: 9b2cd8d3c4382594885c67da57b4e3a1, type: 3}
   firePoint: {fileID: 1374674984}
   shootCooldown: 0.3
+--- !u!114 &1374674989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374674982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c171c920b4fd69648abcc8c5aff6804a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 5
 --- !u!1 &1638498046
 GameObject:
   m_ObjectHideFlags: 0
