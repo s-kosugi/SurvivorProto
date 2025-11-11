@@ -21,7 +21,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         currentHP -= damage;
         HealthChanged?.Invoke(currentHP, maxHP);
-        Debug.Log($"Player took {damage} damage! HP: {currentHP}");
 
         if (currentHP <= 0)
         {
@@ -31,7 +30,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     void Die()
     {
-        Debug.Log("Player Died!");
         GameManager.Instance?.EndGame();
     }
 

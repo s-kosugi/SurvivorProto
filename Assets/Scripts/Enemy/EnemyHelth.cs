@@ -21,16 +21,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         EffectType effectType = EffectType.None;
         currentHP -= damage;
 
-        // ★ 攻撃タイプに応じたエフェクト生成
-        switch (attackType)
-        {
-            case AttackType.Melee:
-                effectType = EffectType.MeleeHit;
-                break;
-            case AttackType.Bullet:
-                effectType = EffectType.ShotHit;
-                break;
-        }
+        // 攻撃タイプに応じたエフェクト生成
+        effectType = EffectLibrary.Instance.GetDamageEffectType(attackType);
 
         // 攻撃と敵の間にヒットエフェクトを生成
         Vector3 center = (transform.position + attackerPos) * 0.5f;
@@ -49,6 +41,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private void Die()
     {
         GameManager.Instance?.AddScore(score);
+        EnemyManager.Instance.UnregisterEnemy(this.gameObject);
         Destroy(gameObject);
     }
 }

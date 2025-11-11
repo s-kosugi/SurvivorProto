@@ -49,8 +49,9 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // 敵を全消去
-        foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
-            Destroy(enemy);
+        if (EnemyManager.Instance != null){
+            EnemyManager.Instance.ClearAllEnemies();
+        }
 
         // スコア初期化
         score = 0;
