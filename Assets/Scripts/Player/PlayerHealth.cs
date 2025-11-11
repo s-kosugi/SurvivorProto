@@ -17,7 +17,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         HealthChanged?.Invoke(currentHP, maxHP); // 初期値反映
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage,AttackType attackType)
     {
         currentHP -= damage;
         HealthChanged?.Invoke(currentHP, maxHP);

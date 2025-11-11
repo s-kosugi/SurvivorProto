@@ -1,14 +1,21 @@
 using UnityEngine;
 
+/// <summary>
+/// 敵が攻撃してダメージを与えた
+/// </summary>
 public class EnemyDamage : MonoBehaviour
 {
     [SerializeField] private int contactDamage = 1;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out IDamageable target))
+        // 攻撃対象がプレイヤーだけなら
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            target.TakeDamage(contactDamage);
+            if (collision.gameObject.TryGetComponent(out IDamageable target))
+            {
+                target.TakeDamage(contactDamage, AttackType.Melee);
+            }
         }
     }
 }

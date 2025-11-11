@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour
     {
         if (other.TryGetComponent(out IDamageable target))
         {
-            target.TakeDamage(damage);
+            target.TakeDamage(damage,AttackType.Bullet);
             Destroy(gameObject);
         }
     }
