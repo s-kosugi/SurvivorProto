@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMeleeAttack : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer renderer;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [Header("Attack Settings")]
     public float attackCooldown = 1.0f;
     public float attackRange = 2.0f;
@@ -40,7 +40,7 @@ public class PlayerMeleeAttack : MonoBehaviour
         yield return new WaitForSeconds(0.2f); // 攻撃タイミング
 
         // 攻撃エフェクト生成
-        EffectLibrary.Instance.SpawnEffect(EffectType.Slash, attackOrigin.position, default,renderer);
+        EffectLibrary.Instance.SpawnEffect(EffectType.Slash, attackOrigin.position, default,spriteRenderer);
 
         // ★2D用：Overlapping Circleで検出
         Collider2D[] hits = Physics2D.OverlapCircleAll(attackOrigin.position, attackRange);
@@ -52,7 +52,7 @@ public class PlayerMeleeAttack : MonoBehaviour
                 var enemy = hit.GetComponent<EnemyHealth>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(attackDamage, AttackType.Melee);
+                    enemy.TakeDamage(attackDamage, AttackType.Melee,this.transform.position);
 
                     // ノックバック（2D版）
                     Rigidbody2D rb = hit.GetComponent<Rigidbody2D>();

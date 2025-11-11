@@ -81,3 +81,4 @@ desktop.ini
 # 追加で除外したい作業用ディレクトリ
 TempAssets/
 Placeholder/
+Assets/Prefabs/Effect/AssetStoreFreeAsset/

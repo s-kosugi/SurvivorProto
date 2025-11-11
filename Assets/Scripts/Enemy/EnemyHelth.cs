@@ -16,10 +16,9 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemyRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void TakeDamage(int damage,AttackType attackType = AttackType.Melee)
+    public void TakeDamage(int damage,AttackType attackType,Vector3 attackerPos)
     {
         EffectType effectType = EffectType.None;
-        Debug.Log($"TakeDamage called by {new System.Diagnostics.StackTrace().GetFrame(1).GetMethod().DeclaringType}");
         currentHP -= damage;
 
         // ★ 攻撃タイプに応じたエフェクト生成
@@ -33,7 +32,13 @@ public class EnemyHealth : MonoBehaviour, IDamageable
                 break;
         }
 
-        effectLibrary.SpawnEffect(effectType,transform.position,default,enemyRenderer);
+        // 攻撃と敵の間にヒットエフェクトを生成
+        Vector3 center = (transform.position + attackerPos) * 0.5f;
+        Vector3 dir = (transform.position - attackerPos).normalized;
+        Vector3 hitPos = center - dir * 0.2f;
+
+        EffectLibrary.Instance.SpawnEffect(effectType, hitPos, Quaternion.identity, enemyRenderer, 1);
+
 
         if (currentHP <= 0)
         {
