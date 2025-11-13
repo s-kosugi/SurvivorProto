@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMeleeAttack : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
+
     [Header("Attack Settings")]
     public float attackCooldown = 1.0f;
     public float attackRange = 2.0f;
@@ -16,19 +16,37 @@ public class PlayerMeleeAttack : MonoBehaviour
     private float lastAttackTime;
 
     [Header("References")]
-    public Transform attackOrigin; // 攻撃基準点（プレイヤー前方）
+    public Transform attackOrigin;
 
-    void Update()
+    private PlayerControls controls;
+    private PlayerController playerController;
+
+    void Awake()
     {
-        if (Keyboard.current.vKey.wasPressedThisFrame) // VKeyで攻撃
-        {
-            TryAttack();
-        }
+        controls = new PlayerControls();
+        playerController = GetComponent<PlayerController>();
+    }
+
+    void OnEnable()
+    {
+        controls.Enable();
+        controls.Player.Shoot.performed += _ => TryAttack(); 
+        // → 光と同じ「Shoot」入力で差し替え（後述）
+    }
+
+    void OnDisable()
+    {
+        controls.Player.Shoot.performed -= _ => TryAttack();
+        controls.Disable();
     }
 
     void TryAttack()
     {
+        // 光モードなら何もしない
+        if (playerController.ModeState == PlayerModeState.Light) return;
+
         if (Time.time - lastAttackTime < attackCooldown || isAttacking) return;
+
         StartCoroutine(DoAttack());
     }
 
@@ -37,12 +55,17 @@ public class PlayerMeleeAttack : MonoBehaviour
         isAttacking = true;
         lastAttackTime = Time.time;
 
-        yield return new WaitForSeconds(0.2f); // 攻撃タイミング
+        yield return new WaitForSeconds(0.2f);
 
-        // 攻撃エフェクト生成
-        EffectLibrary.Instance.SpawnEffect(EffectType.Slash, attackOrigin.position, default,spriteRenderer);
+        // 攻撃エフェクト
+        EffectLibrary.Instance.SpawnEffect(
+            EffectType.Slash,
+            attackOrigin.position,
+            default,
+            spriteRenderer
+        );
 
-        // ★2D用：Overlapping Circleで検出
+        // 範囲ダメージ
         Collider2D[] hits = Physics2D.OverlapCircleAll(attackOrigin.position, attackRange);
 
         foreach (var hit in hits)
@@ -52,19 +75,15 @@ public class PlayerMeleeAttack : MonoBehaviour
                 var enemy = hit.GetComponent<EnemyHealth>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(attackDamage, AttackType.Melee,this.transform.position);
+                    enemy.TakeDamage(attackDamage, AttackType.Melee, this.transform.position);
 
-                    // ノックバック（2D版）
+                    // ノックバック
                     Rigidbody2D rb = hit.GetComponent<Rigidbody2D>();
                     if (rb != null)
                     {
                         Vector2 dir = (hit.transform.position - attackOrigin.position).normalized;
                         rb.AddForce(dir * knockbackForce, ForceMode2D.Impulse);
                     }
-                }
-                else
-                {
-                    Debug.LogWarning($"Enemy {hit.name} has no EnemyHealth!");
                 }
             }
         }
@@ -73,7 +92,7 @@ public class PlayerMeleeAttack : MonoBehaviour
         isAttacking = false;
     }
 
-    // 攻撃範囲をSceneビューで可視化
+    // Scene可視化
     void OnDrawGizmosSelected()
     {
         if (attackOrigin == null) return;
