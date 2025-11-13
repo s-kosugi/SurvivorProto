@@ -2,9 +2,14 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    // 残像スプライト
+    [SerializeField] private GameObject ghostPrefab;
+    // 残像スプライトの間隔
+    [SerializeField] private float ghostInterval = 0.04f;
     public float speed = 10f;
     public float lifetime = 2f;
     public int damage = 1;
+    private float ghostTimer = 0f;
 
     Vector2 _dir = Vector2.up;  // デフォルト（上方向）
 
@@ -24,6 +29,17 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         transform.Translate(_dir * speed * Time.deltaTime, Space.World);
+
+         // ---- 残像 ----
+        if(ghostPrefab != null)
+        {
+            ghostTimer += Time.deltaTime;
+            if (ghostTimer >= ghostInterval)
+            {
+                ghostTimer = 0f;
+                var g = Instantiate(ghostPrefab, transform.position, transform.rotation);
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)

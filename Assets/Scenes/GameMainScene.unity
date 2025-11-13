@@ -6428,6 +6428,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 3712233948235027245, guid: 9b2cd8d3c4382594885c67da57b4e3a1, type: 3}
   firePoint: {fileID: 1374674984}
   shootCooldown: 0.3
+  spreadAngle: 45
+  spreadCount: 8
 --- !u!114 &1374674989
 MonoBehaviour:
   m_ObjectHideFlags: 0

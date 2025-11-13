@@ -161,6 +161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9341b82815a51db4bbbbebb1f601d98c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ghostPrefab: {fileID: 5432739619563520274, guid: 2d4db19c12827fc41b2ff3aedb68b104, type: 3}
+  ghostInterval: 0.04
   speed: 10
   lifetime: 2
   damage: 1
