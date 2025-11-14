@@ -44,6 +44,20 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.TryGetComponent(out EnemyLightWeak weak))
+        {
+            // ★ 弱点処理版ダメージを優先
+            weak.ApplyWeaknessDamage(
+                damage,
+                PlayerModeState.Light,         // ← 今のフォームを渡す
+                AttackType.Bullet,
+                (other.transform.position - transform.position).normalized
+            );
+
+            Destroy(gameObject);
+            return;  // ★ EnemyHealth.TakeDamageを呼ばないように抜ける
+        }
+        
         if (other.TryGetComponent(out IDamageable target))
         {
             target.TakeDamage(damage,AttackType.Bullet,this.transform.position);
