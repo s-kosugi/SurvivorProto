@@ -70,23 +70,35 @@ public class PlayerMeleeAttack : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            if (hit.CompareTag("Enemy"))
-            {
-                var enemy = hit.GetComponent<EnemyHealth>();
-                if (enemy != null)
-                {
-                    enemy.TakeDamage(attackDamage, AttackType.Melee, this.transform.position);
+            if (!hit.CompareTag("Enemy")) continue;
 
-                    // ノックバック
-                    Rigidbody2D rb = hit.GetComponent<Rigidbody2D>();
-                    if (rb != null)
-                    {
-                        Vector2 dir = (hit.transform.position - attackOrigin.position).normalized;
-                        rb.AddForce(dir * knockbackForce, ForceMode2D.Impulse);
-                    }
+            Vector2 hitDir = (hit.transform.position - attackOrigin.position).normalized;
+
+            // ① 近接弱点（EnemyDarkWeak）
+            if (hit.TryGetComponent(out EnemyDarkWeak darkWeak))
+            {
+                darkWeak.ApplyWeaknessDamage(
+                    attackDamage,
+                    PlayerModeState.Dark,
+                    AttackType.Melee,
+                    hitDir
+                );
+                continue;
+            }
+
+            // ② 通常敵（EnemyHealth）
+            if (hit.TryGetComponent(out EnemyHealth enemy))
+            {
+                enemy.TakeDamage(attackDamage, AttackType.Melee, this.transform.position);
+
+                if (hit.TryGetComponent(out Rigidbody2D rb))
+                {
+                    rb.AddForce(hitDir * knockbackForce, ForceMode2D.Impulse);
                 }
+                continue;
             }
         }
+
 
         yield return new WaitForSeconds(0.2f);
         isAttacking = false;
