@@ -49,9 +49,11 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // 敵を全消去
-        if (EnemyManager.Instance != null){
-            EnemyManager.Instance.ClearAllEnemies();
-        }
+        EnemyManager.Instance?.ClearAllEnemies();
+        // Wave初期化
+        WaveEventManager.Instance?.ResetWaveState();
+        // 弾初期化
+        BulletManager.Instance?.ClearAllBullets();
 
         // スコア初期化
         score = 0;

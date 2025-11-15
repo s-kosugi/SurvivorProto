@@ -3,7 +3,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [Header("----- Basic Settings -----")]
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private float speed = 10f;     // Initで上書き可能
     [SerializeField] private float lifetime = 2f;
     [SerializeField] private int damage = 1;
 
@@ -13,32 +13,37 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float ghostInterval = 0.04f;
     float ghostTimer = 0f;
 
-    Vector2 _dir = Vector2.up;
-    BulletOwner owner = BulletOwner.Player;
+    private Vector2 _dir = Vector2.up;
+    private BulletOwner owner = BulletOwner.Player;
 
-    // --------------------------------------------------------
-    // 初期化（生成時に呼ぶ）
-    // --------------------------------------------------------
-    public void Init(Vector2 dir, BulletOwner owner, int damage)
+    // ========================================================
+    // ★★ Initを拡張して速度まで全セット可能にする ★★
+    // ========================================================
+    public void Init(Vector2 dir, BulletOwner owner, int damage, float speed = 10f)
     {
         this.owner = owner;
         this.damage = damage;
+        this.speed = speed;
 
         SetDirection(dir);
     }
+
+    // 任意で単独変更したい場合用の補助関数（残す）
+    public void SetSpeed(float newSpeed) => speed = newSpeed;
 
     public void SetDirection(Vector2 dir)
     {
         // 方向設定
         _dir = dir.sqrMagnitude > 0 ? dir.normalized : Vector2.up;
 
-        // 回転設定
+        // 弾の見た目の回転設定
         float ang = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg - 90f;
         transform.rotation = Quaternion.Euler(0, 0, ang);
     }
 
     void Start()
     {
+        BulletManager.Instance?.RegisterBullet(this.gameObject);
         Destroy(gameObject, lifetime);
     }
 
@@ -65,46 +70,34 @@ public class Bullet : MonoBehaviour
     // --------------------------------------------------------
     void OnTriggerEnter2D(Collider2D other)
     {
-        // ===== プレイヤー弾 =====
         if (owner == BulletOwner.Player)
         {
-            // 1) 光弱点の敵
+            // 光弱点
             if (other.TryGetComponent(out EnemyLightWeak lightWeak))
             {
                 Vector2 hitDir = (other.transform.position - transform.position).normalized;
 
-                lightWeak.ApplyWeaknessDamage(
-                    damage,
-                    PlayerModeState.Light,
-                    AttackType.Bullet,
-                    hitDir
-                );
+                lightWeak.ApplyWeaknessDamage(damage, PlayerModeState.Light,
+                                              AttackType.Bullet, hitDir);
 
                 Destroy(gameObject);
                 return;
             }
 
-            // 2) 近接弱点敵（EnemyDarkWeak）対応
+            // 闇弱点
             if (other.TryGetComponent(out EnemyDarkWeak darkWeak))
             {
                 Vector2 hitDir = (other.transform.position - transform.position).normalized;
 
-                // カウンター発動
                 darkWeak.OnHitByBullet(hitDir);
-
-                // 弱点判定込みダメージ（闇/光フォームで可変）
-                darkWeak.ApplyWeaknessDamage(
-                    damage,
-                    PlayerModeState.Light,
-                    AttackType.Bullet,
-                    hitDir
-                );
+                darkWeak.ApplyWeaknessDamage(damage, PlayerModeState.Light,
+                                             AttackType.Bullet, hitDir);
 
                 Destroy(gameObject);
                 return;
             }
 
-            // 3) 通常IDamageable
+            // 通常IDamageable
             if (other.TryGetComponent(out IDamageable target))
             {
                 target.TakeDamage(damage, AttackType.Bullet, transform.position);
@@ -112,8 +105,6 @@ public class Bullet : MonoBehaviour
                 return;
             }
         }
-
-        // ===== 敵弾 =====
         else if (owner == BulletOwner.Enemy)
         {
             if (other.TryGetComponent(out PlayerHealth player))
@@ -123,5 +114,9 @@ public class Bullet : MonoBehaviour
                 return;
             }
         }
+    }
+    private void OnDestroy()
+    {
+        BulletManager.Instance?.UnregisterBullet(this.gameObject);
     }
 }

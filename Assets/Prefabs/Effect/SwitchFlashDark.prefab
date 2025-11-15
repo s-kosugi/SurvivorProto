@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 750160538871531005}
   - component: {fileID: 450348545826726691}
   - component: {fileID: 527443499381693078}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: SwitchFlashDark
   m_TagString: Untagged
   m_Icon: {fileID: 0}

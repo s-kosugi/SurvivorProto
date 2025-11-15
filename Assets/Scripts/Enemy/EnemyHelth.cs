@@ -9,7 +9,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private EffectLibrary effectLibrary;
     private SpriteRenderer enemyRenderer;
 
-    void Start()
+    protected virtual void Start()
     {
         currentHP = maxHP;
         effectLibrary = EffectLibrary.Instance;
@@ -38,10 +38,11 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
     }
 
-    private void Die()
+    protected virtual void Die()
     {
         GameManager.Instance?.AddScore(score);
         EnemyManager.Instance.UnregisterEnemy(this.gameObject);
         Destroy(gameObject);
     }
+
 }

@@ -6,10 +6,13 @@ using UnityEngine.InputSystem; // 新InputSystem用
 public class PlayerController : MonoBehaviour
 {
     public PlayerModeState ModeState { get; private set; } = PlayerModeState.Light;
+    public PlayerHealth Health => health;
 
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite lightSprite;
     [SerializeField] private Sprite darkSprite;
+
+    [SerializeField] private PlayerHealth health;
 
     [Header("Mode Effects")]
     [SerializeField] private GameObject lightAura;

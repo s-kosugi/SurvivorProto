@@ -15,14 +15,14 @@ public class EnemyDarkWeak : MonoBehaviour
     [SerializeField] private float shootInterval = 1.5f;    // 通常射撃間隔
     [SerializeField] private float stopShootRange = 1.2f;   // この距離未満で射撃停止
     [SerializeField] private int shootDamage = 1;
-    [SerializeField] private float bulletSpeed = 5f;
+    [SerializeField] private float bulletSpeed = 8f;
 
     float shootTimer = 0f;
 
     [Header("----- Counter Attack -----")]
     [SerializeField] private GameObject counterBulletPrefab; // カウンター弾
     [SerializeField] private int counterDamage = 1;
-    [SerializeField] private float counterSpeed = 4f;
+    [SerializeField] private float counterSpeed = 10f;
 
     [Header("----- Weakness Settings -----")]
     public float darkMeleeMultiplier = 1.8f;   // 闇近接 → 露骨に弱点
@@ -81,7 +81,7 @@ public class EnemyDarkWeak : MonoBehaviour
         var b = Instantiate(bulletPrefab, transform.position, Quaternion.identity)
                 .GetComponent<Bullet>();
 
-        b.Init(dir, BulletOwner.Enemy, shootDamage);
+        b.Init(dir, BulletOwner.Enemy, shootDamage,bulletSpeed);
     }
 
     // ======================================================
@@ -96,7 +96,7 @@ public class EnemyDarkWeak : MonoBehaviour
         var cb = Instantiate(counterBulletPrefab, transform.position, Quaternion.identity)
                     .GetComponent<Bullet>();
 
-        cb.Init(dir, BulletOwner.Enemy, counterDamage);
+        cb.Init(dir, BulletOwner.Enemy, counterDamage,counterSpeed);
     }
 
 
