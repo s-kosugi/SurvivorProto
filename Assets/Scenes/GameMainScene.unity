@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &51363012
 RectTransform:
   m_ObjectHideFlags: 0
@@ -472,7 +472,7 @@ Transform:
   m_GameObject: {fileID: 241084083}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.84, y: -0.57, z: 0}
+  m_LocalPosition: {x: 0.84, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6496,12 +6496,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 1374674983}
+  playerController: {fileID: 1374674987}
   attackCooldown: 1
   attackRange: 2
   attackAngle: 120
   attackDamage: 2
   knockbackForce: 3
   attackOrigin: {fileID: 241084084}
+  attackEffectPrefab: {fileID: 6242566773016071314, guid: 6f8a6d27a905ce247b8da1b4737ab48a, type: 3}
+  offsetRightX: 0.1
+  offsetLeftX: 1.1
 --- !u!95 &1374674991
 Animator:
   serializedVersion: 5

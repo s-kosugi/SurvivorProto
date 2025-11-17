@@ -27,10 +27,13 @@ public class PlayerController : MonoBehaviour
     private Vector2 lastMoveDir = Vector2.right;
     private float currentMoveSpeed = 5f;
     private List<GameObject> spawnedEffects = new List<GameObject>();
+    public bool IsFacingLeft {get; private set; }
+
 
     void Awake()
     {
         controls = new PlayerControls();
+        IsFacingLeft = false;
     }
 
     private void Start()
@@ -93,7 +96,8 @@ public class PlayerController : MonoBehaviour
         if (moveInput.x > 0.01f) lastMoveDir = Vector2.right;
         else if (moveInput.x < -0.01f) lastMoveDir = Vector2.left;
 
-        animator.SetBool("IsFacingLeft", lastMoveDir.x < 0);
+        IsFacingLeft = lastMoveDir.x < 0;
+        animator.SetBool("IsFacingLeft", IsFacingLeft);
     }
 
     void FixedUpdate()

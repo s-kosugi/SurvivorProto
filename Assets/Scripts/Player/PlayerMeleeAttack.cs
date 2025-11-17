@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerMeleeAttack : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private PlayerController playerController;
 
     [Header("Attack Settings")]
     public float attackCooldown = 1.0f;
@@ -16,22 +17,24 @@ public class PlayerMeleeAttack : MonoBehaviour
     private float lastAttackTime;
 
     [Header("References")]
-    public Transform attackOrigin;
+    public Transform attackOrigin;        // 攻撃基準点
+    public GameObject attackEffectPrefab; // 斬撃エフェクト等（任意）
+
+    [Header("Attack Offset (Per Direction)")]
+    [SerializeField] private float offsetRightX = 1.0f;
+    [SerializeField] private float offsetLeftX = 1.0f;
 
     private PlayerControls controls;
-    private PlayerController playerController;
 
     void Awake()
     {
         controls = new PlayerControls();
-        playerController = GetComponent<PlayerController>();
     }
 
     void OnEnable()
     {
         controls.Enable();
-        controls.Player.Shoot.performed += _ => TryAttack(); 
-        // → 光と同じ「Shoot」入力で差し替え（後述）
+        controls.Player.Shoot.performed += _ => TryAttack();
     }
 
     void OnDisable()
@@ -42,9 +45,7 @@ public class PlayerMeleeAttack : MonoBehaviour
 
     void TryAttack()
     {
-        // 光モードなら何もしない
         if (playerController.ModeState == PlayerModeState.Light) return;
-
         if (Time.time - lastAttackTime < attackCooldown || isAttacking) return;
 
         StartCoroutine(DoAttack());
@@ -55,26 +56,44 @@ public class PlayerMeleeAttack : MonoBehaviour
         isAttacking = true;
         lastAttackTime = Time.time;
 
-        yield return new WaitForSeconds(0.2f);
+        // 若干の攻撃準備時間
+        yield return new WaitForSeconds(0.15f);
 
-        // 攻撃エフェクト
-        EffectLibrary.Instance.SpawnEffect(
-            EffectType.Slash,
-            attackOrigin.position,
-            default,
-            spriteRenderer
-        );
+         // ---- 方向別オフセット適用 ----
+        float offset = playerController.IsFacingLeft ? offsetLeftX : offsetRightX;
 
-        // 範囲ダメージ
-        Collider2D[] hits = Physics2D.OverlapCircleAll(attackOrigin.position, attackRange);
+        Vector2 attackPos = (Vector2)attackOrigin.position
+                          + new Vector2(playerController.IsFacingLeft ? -offset : offset, 0f);
+
+
+        // ================================
+        // ② エフェクト生成（任意）
+        // ================================
+        if (attackEffectPrefab != null)
+        {
+            var fx = Instantiate(attackEffectPrefab, attackPos, Quaternion.identity);
+
+            // 左向きならエフェクトを反転
+            if (playerController.IsFacingLeft)
+            {
+                var scale = fx.transform.localScale;
+                scale.x *= -1;
+                fx.transform.localScale = scale;
+            }
+        }
+
+        // ================================
+        // ③ 範囲判定（OverlapSphere → ここを中心に）
+        // ================================
+        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPos, attackRange);
 
         foreach (var hit in hits)
         {
             if (!hit.CompareTag("Enemy")) continue;
 
-            Vector2 hitDir = (hit.transform.position - attackOrigin.position).normalized;
+            Vector2 hitDir = (hit.transform.position - (Vector3)attackPos).normalized;
 
-            // ① 近接弱点（EnemyDarkWeak）
+            // ① 弱点持ち敵
             if (hit.TryGetComponent(out EnemyDarkWeak darkWeak))
             {
                 darkWeak.ApplyWeaknessDamage(
@@ -86,7 +105,7 @@ public class PlayerMeleeAttack : MonoBehaviour
                 continue;
             }
 
-            // ② 通常敵（EnemyHealth）
+            // ② 通常敵
             if (hit.TryGetComponent(out EnemyHealth enemy))
             {
                 enemy.TakeDamage(attackDamage, AttackType.Melee, this.transform.position);
@@ -99,7 +118,6 @@ public class PlayerMeleeAttack : MonoBehaviour
             }
         }
 
-
         yield return new WaitForSeconds(0.2f);
         isAttacking = false;
     }
@@ -108,7 +126,15 @@ public class PlayerMeleeAttack : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         if (attackOrigin == null) return;
+
+        // 向き依存で可視化
+        bool isLeft = false;
+        if (playerController != null) isLeft = playerController.IsFacingLeft;
+
+        Vector2 attackDirection = isLeft ? Vector2.left : Vector2.right;
+        Vector2 attackPos = (Vector2)attackOrigin.position + (attackDirection * attackRange * 0.5f);
+
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackOrigin.position, attackRange);
+        Gizmos.DrawWireSphere(attackPos, attackRange);
     }
 }
