@@ -6278,6 +6278,8 @@ GameObject:
   - component: {fileID: 1374674988}
   - component: {fileID: 1374674989}
   - component: {fileID: 1374674990}
+  - component: {fileID: 1374674992}
+  - component: {fileID: 1374674991}
   m_Layer: 3
   m_Name: TempPlayer
   m_TagString: Player
@@ -6439,10 +6441,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8db969092fc4a543b1b6343dc24fc21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 1374674983}
-  lightSprite: {fileID: 21300000, guid: 9c9ce0627b48bff41894bc8057cdb97c, type: 3}
-  darkSprite: {fileID: 21300000, guid: 9c9ce0627b48bff41894bc8057cdb97c, type: 3}
   health: {fileID: 1374674989}
+  rb: {fileID: 1374674986}
+  animator: {fileID: 1374674991}
   lightAura: {fileID: 1425623944}
   darkAura: {fileID: 871010864}
   switchEffectPrefab: {fileID: 4097512810353927468, guid: ba79b6af6bc4eaa4c89a73464ca6dcf1, type: 3}
@@ -6450,7 +6451,6 @@ MonoBehaviour:
   darkFlashPrefab: {fileID: 7079655572318042560, guid: b892861e8f0c0974ca8c4cb5c5efb92b, type: 3}
   lightMoveSpeed: 5
   darkMoveSpeed: 7
-  moveSpeed: 5
 --- !u!114 &1374674988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6502,6 +6502,40 @@ MonoBehaviour:
   attackDamage: 2
   knockbackForce: 3
   attackOrigin: {fileID: 241084084}
+--- !u!95 &1374674991
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374674982}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: dd13dba4c71e81e44958387f3393f966, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1374674992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374674982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6466d5e062e70784e855f24161eabd03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1374674991}
 --- !u!1 &1425623944
 GameObject:
   m_ObjectHideFlags: 0

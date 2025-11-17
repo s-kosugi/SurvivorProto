@@ -1,18 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.InputSystem; // 新InputSystem用
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     public PlayerModeState ModeState { get; private set; } = PlayerModeState.Light;
     public PlayerHealth Health => health;
-
-    [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Sprite lightSprite;
-    [SerializeField] private Sprite darkSprite;
-
     [SerializeField] private PlayerHealth health;
+    [SerializeField] Rigidbody2D rb;
+    [SerializeField] Animator animator;
 
     [Header("Mode Effects")]
     [SerializeField] private GameObject lightAura;
@@ -25,34 +22,34 @@ public class PlayerController : MonoBehaviour
     public float lightMoveSpeed = 5f;
     public float darkMoveSpeed = 7f;
 
-
-    private Rigidbody2D rb;
     private PlayerControls controls;
     private Vector2 moveInput;
-    public float moveSpeed = 5f;
-
+    private Vector2 lastMoveDir = Vector2.right;
     private float currentMoveSpeed = 5f;
     private List<GameObject> spawnedEffects = new List<GameObject>();
+
     void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
         controls = new PlayerControls();
     }
 
     private void Start()
     {
-        ApplyModeStats();  // 初期モードの移動速度をセット
+        ApplyModeStats();
     }
+
     private void OnEnable()
     {
         controls.Enable();
         controls.Player.ElementalSwitch.performed += _ => SwitchMode();
     }
+
     private void OnDisable()
     {
         controls.Player.ElementalSwitch.performed -= _ => SwitchMode();
         controls.Disable();
     }
+
     private void SwitchMode()
     {
         ModeState = (ModeState == PlayerModeState.Light)
@@ -62,50 +59,53 @@ public class PlayerController : MonoBehaviour
         ApplyModeVisual();
         ApplyModeStats();
     }
-    /// <summary>
-    /// 光闇モードの見た目切り替え適用
-    /// </summary>
+
     private void ApplyModeVisual()
     {
-        spriteRenderer.sprite = (ModeState == PlayerModeState.Light)
-            ? lightSprite
-            : darkSprite;
-
-        // 光/闇のオーラ切り替え
         lightAura.SetActive(ModeState == PlayerModeState.Light);
         darkAura.SetActive(ModeState == PlayerModeState.Dark);
 
-        // 切り替えエフェクト
-        if (ModeState == PlayerModeState.Light)
-            switchEffectPrefab = lightFlashPrefab;
-        else
-            switchEffectPrefab = darkFlashPrefab;
-        var fx = Instantiate(switchEffectPrefab, transform.position, Quaternion.identity);
+        var fxPrefab = (ModeState == PlayerModeState.Light)
+            ? lightFlashPrefab
+            : darkFlashPrefab;
+
+        var fx = Instantiate(fxPrefab, transform.position, Quaternion.identity);
         spawnedEffects.Add(fx);
     }
 
     private void ApplyModeStats()
     {
-        // 仮で移動速度を変える例
         currentMoveSpeed = (ModeState == PlayerModeState.Light)
             ? lightMoveSpeed
             : darkMoveSpeed;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        Vector2 input = controls.Player.Move.ReadValue<Vector2>();
-        rb.MovePosition(rb.position + input * currentMoveSpeed * Time.fixedDeltaTime);
+        // 入力取得
+        moveInput = controls.Player.Move.ReadValue<Vector2>();
+
+        // ---- Animatorへ値送信 ----
+        animator.SetFloat("MoveSpeed", moveInput.magnitude);
+        animator.SetBool("IsDarkForm", ModeState == PlayerModeState.Dark);
+
+        // 左右判定
+        if (moveInput.x > 0.01f) lastMoveDir = Vector2.right;
+        else if (moveInput.x < -0.01f) lastMoveDir = Vector2.left;
+
+        animator.SetBool("IsFacingLeft", lastMoveDir.x < 0);
     }
 
-    // リセット用：全部消す
+    void FixedUpdate()
+    {
+        rb.MovePosition(rb.position + moveInput * currentMoveSpeed * Time.fixedDeltaTime);
+    }
+
     public void ClearAllEffects()
     {
-        // 常時エフェクトOFF
         lightAura.SetActive(false);
         darkAura.SetActive(false);
 
-        // 切替瞬間エフェクト削除
         foreach (var fx in spawnedEffects)
         {
             if (fx != null) Destroy(fx);
