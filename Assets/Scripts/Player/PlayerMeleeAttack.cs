@@ -7,22 +7,34 @@ public class PlayerMeleeAttack : MonoBehaviour
     [SerializeField] private PlayerController playerController;
 
     [Header("Attack Settings")]
-    public float attackCooldown = 1.0f;
-    public float attackRange = 2.0f;
+    public float attackCooldown = 0.5f;
+    public float attackRange = 1.8f;
     public float attackAngle = 120f;
     public int attackDamage = 2;
     public float knockbackForce = 3f;
+
+    [Header("Timing")]
+    [SerializeField] private float attackRecoveryDuration = 0.20f; // 次の攻撃入力が可能になるまでの時間
+    [SerializeField] private float moveLockDuration = 0.25f;       // 足を止めておく時間
+    [SerializeField] private float stepForwardDistance = 0.25f;    // 踏み込み距離
 
     private bool isAttacking = false;
     private float lastAttackTime;
 
     [Header("References")]
-    public Transform attackOrigin;        // 攻撃基準点
-    public GameObject attackEffectPrefab; // 斬撃エフェクト等（任意）
+    public Transform attackOrigin;
+    public GameObject attackEffectPrefab;
 
     [Header("Attack Offset (Per Direction)")]
     [SerializeField] private float offsetRightX = 1.0f;
     [SerializeField] private float offsetLeftX = 1.0f;
+
+    [Header("Debug Rendering")]
+    [SerializeField] private bool debugShowHitbox = true;
+    [SerializeField] private float debugDisplayTime = 0.15f;
+    [SerializeField] private Material debugLineMaterial;
+    [SerializeField] private Color debugColor = Color.yellow;
+    [SerializeField] private float debugLineWidth = 0.05f;
 
     private PlayerControls controls;
 
@@ -46,7 +58,10 @@ public class PlayerMeleeAttack : MonoBehaviour
     void TryAttack()
     {
         if (playerController.ModeState == PlayerModeState.Light) return;
-        if (Time.time - lastAttackTime < attackCooldown || isAttacking) return;
+
+        // 再攻撃制御
+        if (Time.time - lastAttackTime < attackCooldown) return;
+        if (isAttacking) return;
 
         StartCoroutine(DoAttack());
     }
@@ -56,19 +71,43 @@ public class PlayerMeleeAttack : MonoBehaviour
         isAttacking = true;
         lastAttackTime = Time.time;
 
-        // 若干の攻撃準備時間
-        yield return new WaitForSeconds(0.15f);
+        // 近接移動制御ON
+        playerController.BeginMeleeAttack();
 
-         // ---- 方向別オフセット適用 ----
+        // 踏み込み
+        Vector2 stepDir = playerController.IsFacingLeft ? Vector2.left : Vector2.right;
+        transform.position += (Vector3)(stepDir * stepForwardDistance);
+
+        // 即攻撃発生
+        ExecuteAttack();
+
+        // ▼ 再攻撃可能タイミング：攻撃判定が終わった瞬間
+        yield return new WaitForSeconds(attackRecoveryDuration);
+        isAttacking = false;
+
+        // ▼ 移動ロックはもう少し長く続く可能性あり
+        float extraLock = Mathf.Max(0f, moveLockDuration - attackRecoveryDuration);
+        if (extraLock > 0f)
+            yield return new WaitForSeconds(extraLock);
+
+        // 近接移動制御解除
+        playerController.EndMeleeAttack();
+    }
+
+    private void ExecuteAttack()
+    {
         float offset = playerController.IsFacingLeft ? offsetLeftX : offsetRightX;
 
-        Vector2 attackPos = (Vector2)attackOrigin.position
-                          + new Vector2(playerController.IsFacingLeft ? -offset : offset, 0f);
+        Vector2 attackPos = (Vector2)attackOrigin.position +
+            new Vector2(playerController.IsFacingLeft ? -offset : offset, 0f);
 
+#if UNITY_EDITOR
+        // 攻撃判定デバッグ表示
+        if (debugShowHitbox)
+            StartCoroutine(ShowDebugHitCircle(attackPos, attackRange));
+#endif
 
-        // ================================
-        // ② エフェクト生成（任意）
-        // ================================
+        // エフェクト生成
         if (attackEffectPrefab != null)
         {
             var fx = Instantiate(attackEffectPrefab, attackPos, Quaternion.identity);
@@ -117,24 +156,47 @@ public class PlayerMeleeAttack : MonoBehaviour
                 continue;
             }
         }
-
-        yield return new WaitForSeconds(0.2f);
-        isAttacking = false;
     }
 
-    // Scene可視化
     void OnDrawGizmosSelected()
     {
         if (attackOrigin == null) return;
-
-        // 向き依存で可視化
-        bool isLeft = false;
-        if (playerController != null) isLeft = playerController.IsFacingLeft;
-
+        bool isLeft = (playerController != null) && playerController.IsFacingLeft;
         Vector2 attackDirection = isLeft ? Vector2.left : Vector2.right;
+
         Vector2 attackPos = (Vector2)attackOrigin.position + (attackDirection * attackRange * 0.5f);
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPos, attackRange);
     }
+
+     // =======================================================================
+    // ★ 攻撃判定が起きた瞬間～短時間のみ可視化するコルーチン
+    // =======================================================================
+    private IEnumerator ShowDebugHitCircle(Vector2 center, float radius, int segments = 30)
+    {
+        GameObject lineObj = new GameObject("DebugHitCircle");
+        LineRenderer lr = lineObj.AddComponent<LineRenderer>();
+
+        lr.positionCount = segments + 1;
+        lr.loop = true;
+        lr.material = debugLineMaterial != null ? debugLineMaterial : new Material(Shader.Find("Sprites/Default"));
+        lr.startColor = debugColor;
+        lr.endColor = debugColor;
+        lr.startWidth = debugLineWidth;
+        lr.endWidth = debugLineWidth;
+        lr.sortingOrder = 999; // 手前に表示
+
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = (float)i / segments * Mathf.PI * 2f;
+            Vector2 pos = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+            lr.SetPosition(i, pos);
+        }
+
+        yield return new WaitForSeconds(debugDisplayTime);
+
+        Destroy(lineObj);
+    }
+
 }

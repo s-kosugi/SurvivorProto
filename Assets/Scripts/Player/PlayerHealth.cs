@@ -11,13 +11,18 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     [Header("----- Invincible Settings -----")]
     [SerializeField] private float invincibleTime = 1.0f;
-    [SerializeField] private SpriteRenderer spriteRenderer; // ← Inspectorで設定必須
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     private bool isInvincible = false;
     private float invincibleTimer = 0f;
 
+    // ★ HP変更イベント
     public delegate void OnHealthChanged(int current, int max);
     public event OnHealthChanged HealthChanged;
+
+    // ★ 死亡イベント
+    public delegate void OnDeath();
+    public event OnDeath DeathEvent;
 
     void Start()
     {
@@ -82,6 +87,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     // ======================================================
     void Die()
     {
+        // ★ 先にイベント通知
+        DeathEvent?.Invoke();
+
+        // ★ ゲーム側終了処理（必要なら残す）
         GameManager.Instance?.EndGame();
     }
 

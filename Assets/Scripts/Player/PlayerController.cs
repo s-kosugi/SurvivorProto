@@ -28,12 +28,17 @@ public class PlayerController : MonoBehaviour
     private float currentMoveSpeed = 5f;
     private List<GameObject> spawnedEffects = new List<GameObject>();
     public bool IsFacingLeft {get; private set; }
+    // 近接攻撃中かどうか
+    private bool isMeleeAttacking = false;
 
 
     void Awake()
     {
         controls = new PlayerControls();
         IsFacingLeft = false;
+
+        if (health != null)
+            health.DeathEvent += HandlePlayerDeath;
     }
 
     private void Start()
@@ -55,6 +60,8 @@ public class PlayerController : MonoBehaviour
 
     private void SwitchMode()
     {
+        if (isMeleeAttacking) return; // 攻撃中は切り替え禁止
+
         ModeState = (ModeState == PlayerModeState.Light)
             ? PlayerModeState.Dark
             : PlayerModeState.Light;
@@ -85,10 +92,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // 入力取得
-        moveInput = controls.Player.Move.ReadValue<Vector2>();
+        // 攻撃中は入力値を 0 にする
+        moveInput = isMeleeAttacking ? Vector2.zero : controls.Player.Move.ReadValue<Vector2>();
 
-        // ---- Animatorへ値送信 ----
         animator.SetFloat("MoveSpeed", moveInput.magnitude);
         animator.SetBool("IsDarkForm", ModeState == PlayerModeState.Dark);
 
@@ -100,9 +106,34 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("IsFacingLeft", IsFacingLeft);
     }
 
+
     void FixedUpdate()
     {
+        // 攻撃中は一切移動させない
+        if (isMeleeAttacking) return;
+
         rb.MovePosition(rb.position + moveInput * currentMoveSpeed * Time.fixedDeltaTime);
+    }
+
+
+    public void BeginMeleeAttack()
+    {
+        isMeleeAttacking = true;
+        rb.velocity = Vector2.zero;
+        moveInput = Vector2.zero;
+    }
+
+    public void EndMeleeAttack()
+    {
+        isMeleeAttacking = false;
+    }
+    private void HandlePlayerDeath()
+    {
+        EndMeleeAttack();
+        moveInput = Vector2.zero;
+        rb.velocity = Vector2.zero;
+        animator.SetFloat("MoveSpeed", 0f);
+        ClearAllEffects();
     }
 
     public void ClearAllEffects()

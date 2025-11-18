@@ -6497,11 +6497,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 1374674983}
   playerController: {fileID: 1374674987}
-  attackCooldown: 1
-  attackRange: 2
+  attackCooldown: 0.5
+  attackRange: 1.8
   attackAngle: 120
   attackDamage: 2
   knockbackForce: 3
+  attackRecoveryDuration: 0.2
+  moveLockDuration: 0.25
+  stepForwardDistance: 0.25
   attackOrigin: {fileID: 241084084}
   attackEffectPrefab: {fileID: 6242566773016071314, guid: 6f8a6d27a905ce247b8da1b4737ab48a, type: 3}
   offsetRightX: 0.1
