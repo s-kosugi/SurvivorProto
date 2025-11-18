@@ -19,7 +19,14 @@ public class PlayerMeleeAttack : MonoBehaviour
     [SerializeField] private float stepForwardDistance = 0.25f;    // 踏み込み距離
 
     private bool isAttacking = false;
-    private float lastAttackTime;
+    private bool bufferedInput = false;
+
+    [Header("Combo Settings")]
+    [SerializeField] private int maxComboCount = 3;  // ★ 現状解放最大段数 (1〜3)
+    [SerializeField] private float comboInputWindow = 0.20f;
+
+    private int currentComboStep = 0;
+    private float comboTimer = 0f;
 
     [Header("References")]
     public Transform attackOrigin;
@@ -46,53 +53,110 @@ public class PlayerMeleeAttack : MonoBehaviour
     void OnEnable()
     {
         controls.Enable();
-        controls.Player.Shoot.performed += _ => TryAttack();
+        controls.Player.Shoot.performed += _ => OnAttackInput();
     }
 
     void OnDisable()
     {
-        controls.Player.Shoot.performed -= _ => TryAttack();
+        controls.Player.Shoot.performed -= _ => OnAttackInput();
         controls.Disable();
     }
-
-    void TryAttack()
+    void Update()
+    {
+        // コンボ入力受付中タイマー更新
+        if (currentComboStep > 0)
+        {
+            comboTimer -= Time.deltaTime;
+            if (comboTimer <= 0f)
+            {
+                ResetCombo();
+            }
+        }
+    }
+    private void OnAttackInput()
     {
         if (playerController.ModeState == PlayerModeState.Light) return;
 
-        // 再攻撃制御
-        if (Time.time - lastAttackTime < attackCooldown) return;
-        if (isAttacking) return;
+        // 攻撃中なら予約
+        if (isAttacking)
+        {
+            bufferedInput = true;
+            return;
+        }
 
-        StartCoroutine(DoAttack());
+        // コンボ開始 or 継続受付中
+        if (currentComboStep == 0 || comboTimer > 0f)
+        {
+            currentComboStep++;
+            StartCoroutine(DoAttack());
+        }
     }
-
-    IEnumerator DoAttack()
+    private IEnumerator DoAttack()
     {
         isAttacking = true;
-        lastAttackTime = Time.time;
+        comboTimer = comboInputWindow;
 
-        // 近接移動制御ON
         playerController.BeginMeleeAttack();
 
-        // 踏み込み
         Vector2 stepDir = playerController.IsFacingLeft ? Vector2.left : Vector2.right;
-        transform.position += (Vector3)(stepDir * stepForwardDistance);
+        transform.position += (Vector3)(stepDir * GetStepForward());
 
-        // 即攻撃発生
         ExecuteAttack();
 
-        // ▼ 再攻撃可能タイミング：攻撃判定が終わった瞬間
         yield return new WaitForSeconds(attackRecoveryDuration);
-        isAttacking = false;
-
-        // ▼ 移動ロックはもう少し長く続く可能性あり
-        float extraLock = Mathf.Max(0f, moveLockDuration - attackRecoveryDuration);
+        // コンボ段階に応じて硬直延長
+        float lockTime = GetMoveLockDuration();
+        float extraLock = Mathf.Max(0f, lockTime - attackRecoveryDuration);
         if (extraLock > 0f)
             yield return new WaitForSeconds(extraLock);
 
-        // 近接移動制御解除
+        isAttacking = false;
         playerController.EndMeleeAttack();
+
+        // 次段が存在するなら入力待ち
+        if (currentComboStep < maxComboCount && bufferedInput)
+        {
+            bufferedInput = false;
+            currentComboStep++;
+            StartCoroutine(DoAttack());
+        }
+        else if (currentComboStep >= maxComboCount)
+        {
+            // 3段目後はフィニッシュ
+            ResetCombo();
+        }
     }
+    private float GetStepForward()
+    {
+        switch (currentComboStep)
+        {
+            case 1: return stepForwardDistance;
+            case 2: return stepForwardDistance * 1.3f;
+            case 3: return stepForwardDistance * 1.6f;
+            default: return stepForwardDistance;
+        }
+    }
+    private float GetMoveLockDuration()
+    {
+        switch (currentComboStep)
+        {
+            case 1: return moveLockDuration * 1.0f; // 基本
+            case 2: return moveLockDuration * 1.5f; // やや重く
+            case 3: return moveLockDuration * 1.9f; // 最も重い
+            default: return moveLockDuration;
+        }
+    }
+    private float GetEffectScale(int step)
+    {
+        switch (step)
+        {
+            case 1: return 1.0f;
+            case 2: return 1.25f;
+            case 3: return 1.5f;
+            default: return 1.0f;
+        }
+    }
+
 
     private void ExecuteAttack()
     {
@@ -101,16 +165,14 @@ public class PlayerMeleeAttack : MonoBehaviour
         Vector2 attackPos = (Vector2)attackOrigin.position +
             new Vector2(playerController.IsFacingLeft ? -offset : offset, 0f);
 
-#if UNITY_EDITOR
-        // 攻撃判定デバッグ表示
-        if (debugShowHitbox)
-            StartCoroutine(ShowDebugHitCircle(attackPos, attackRange));
-#endif
-
         // エフェクト生成
         if (attackEffectPrefab != null)
         {
             var fx = Instantiate(attackEffectPrefab, attackPos, Quaternion.identity);
+
+            // 段階ごとに拡大
+            float scaleRate = GetEffectScale(currentComboStep);
+            fx.transform.localScale *= scaleRate;
 
             // 左向きならエフェクトを反転
             if (playerController.IsFacingLeft)
@@ -119,12 +181,23 @@ public class PlayerMeleeAttack : MonoBehaviour
                 scale.x *= -1;
                 fx.transform.localScale = scale;
             }
-        }
+}
+
+
+        Debug.Log("currentComboStep = " + currentComboStep);
+        // コンボ段階で攻撃範囲を決定
+        float radius = GetAttackRadius(currentComboStep);
+
+#if UNITY_EDITOR
+        // 攻撃判定デバッグ表示
+        if (debugShowHitbox)
+            StartCoroutine(ShowDebugHitCircle(attackPos, radius));
+#endif
 
         // ================================
         // ③ 範囲判定（OverlapSphere → ここを中心に）
         // ================================
-        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPos, attackRange);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPos, radius);
 
         foreach (var hit in hits)
         {
@@ -132,7 +205,7 @@ public class PlayerMeleeAttack : MonoBehaviour
 
             Vector2 hitDir = (hit.transform.position - (Vector3)attackPos).normalized;
 
-            // ① 弱点持ち敵
+            // 弱点持ち敵
             if (hit.TryGetComponent(out EnemyDarkWeak darkWeak))
             {
                 darkWeak.ApplyWeaknessDamage(
@@ -144,7 +217,7 @@ public class PlayerMeleeAttack : MonoBehaviour
                 continue;
             }
 
-            // ② 通常敵
+            // 通常敵
             if (hit.TryGetComponent(out EnemyHealth enemy))
             {
                 enemy.TakeDamage(attackDamage, AttackType.Melee, this.transform.position);
@@ -157,6 +230,22 @@ public class PlayerMeleeAttack : MonoBehaviour
             }
         }
     }
+    private float GetAttackRadius(int step)
+    {
+        switch (step)
+        {
+            case 1: return attackRange;
+            case 2: return attackRange * 1.15f;
+            case 3: return attackRange * 1.35f;
+            default: return attackRange;
+        }
+    }
+    private void ResetCombo()
+    {
+        currentComboStep = 0;
+        comboTimer = 0f;
+    }
+
 
     void OnDrawGizmosSelected()
     {

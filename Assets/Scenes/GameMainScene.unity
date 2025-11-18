@@ -6502,13 +6502,20 @@ MonoBehaviour:
   attackAngle: 120
   attackDamage: 2
   knockbackForce: 3
-  attackRecoveryDuration: 0.2
+  attackRecoveryDuration: 0.12
   moveLockDuration: 0.25
   stepForwardDistance: 0.25
+  maxComboCount: 3
+  comboInputWindow: 0.6
   attackOrigin: {fileID: 241084084}
   attackEffectPrefab: {fileID: 6242566773016071314, guid: 6f8a6d27a905ce247b8da1b4737ab48a, type: 3}
   offsetRightX: 0.1
   offsetLeftX: 1.1
+  debugShowHitbox: 1
+  debugDisplayTime: 0.1
+  debugLineMaterial: {fileID: 0}
+  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugLineWidth: 0.05
 --- !u!95 &1374674991
 Animator:
   serializedVersion: 5
