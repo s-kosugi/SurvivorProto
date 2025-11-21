@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemyFollow : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 2f;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     private Rigidbody2D rb;
     private Transform player;
@@ -21,11 +22,19 @@ public class EnemyFollow : MonoBehaviour
     {
         if (player == null) return;
 
-        // プレイヤーへの方向を計算
+        // プレイヤーへの方向
         Vector2 direction = ((Vector2)player.position - rb.position).normalized;
 
-        // MovePositionでスムーズに移動
+        // スプライト反転
+        if (direction.x != 0)
+        {
+            if (spriteRenderer != null)
+                spriteRenderer.flipX = direction.x < 0; // 左に向いていたら反転
+        }
+
+        // スムーズ移動
         Vector2 newPos = rb.position + direction * moveSpeed * Time.fixedDeltaTime;
         rb.MovePosition(newPos);
     }
+
 }

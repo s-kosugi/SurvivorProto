@@ -222,6 +222,8 @@ MonoBehaviour:
   dashSpeed: 10
   dashDuration: 0.7
   recoverTime: 0.8
+  chargeTimeMultiplier: 0.85
+  recoverShortenMultiplier: 0.85
 --- !u!114 &-1124682463073639363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,3 +239,4 @@ MonoBehaviour:
   moveSpeed: 1.5
   stopDistance: 1.5
   rb: {fileID: 3515707553177145472}
+  spriteRenderer: {fileID: 3432476060679249362}
