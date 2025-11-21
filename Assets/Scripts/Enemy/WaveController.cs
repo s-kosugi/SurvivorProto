@@ -6,12 +6,12 @@ public class WaveController : MonoBehaviour
     public static WaveController Instance { get; private set; }
 
     [Header("Wave Settings")]
-    public WaveConfig[] waveConfigs;     // WaveConfigへの参照（Wave1,2,3）
-    public float waveDuration = 10f;     // 各Waveの時間（テスト用10秒）
-    public float miniBossTime = 30f;     // MiniBoss呼び出し時間（Wave3終了後）
+    public WaveConfig[] waveConfigs;
+    public float waveDuration = 10f;      // Wave切替時間
+    public float miniBossTime = 30f;      // MiniBoss発生時間
 
     [Header("Spawners")]
-    public EnemySpawner[] spawners;      // 複数スポナー
+    public EnemySpawner[] spawners;       // 1つだけでOK（相対座標スポーン）
 
     private float timer = 0f;
     private int currentWave = 0;
@@ -29,12 +29,21 @@ public class WaveController : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        // MiniBoss撃破イベント受信
+        if (WaveEventManager.Instance != null)
+        {
+            WaveEventManager.Instance.OnMiniBossCleared += HandleMiniBossCleared;
+        }
+    }
+
     private void Update()
     {
         timer += Time.deltaTime;
 
-        // Wave切り替え 0 → 1 → 2
-        if (currentWave < waveConfigs.Length)
+        // ===== Wave進行 =====
+        if (!miniBossCalled && currentWave < waveConfigs.Length)
         {
             float startTime = currentWave * waveDuration;
             float endTime = (currentWave + 1) * waveDuration;
@@ -44,49 +53,38 @@ public class WaveController : MonoBehaviour
                 StartWave(currentWave);
             }
 
-            // Waveの終了タイミングを超えたら次へ（自動進行）
-            if (timer >= endTime)
+            // MiniBossタイムを越えたらBoss発生
+            if (timer >= miniBossTime)
+            {
+                CallMiniBoss();
+            }
+
+            // WaveDurationによる自然切替
+            if (timer >= endTime && !miniBossCalled)
             {
                 currentWave++;
             }
         }
-
-        // MiniBoss 呼び出しタイミング
-        if (!miniBossCalled && timer >= miniBossTime)
-        {
-            CallMiniBoss();
-        }
     }
 
-    /// <summary>
-    /// 指定Waveの開始処理（RunWaveの実行）
-    /// </summary>
+    // ============================================================
+    //  Wave開始
+    // ============================================================
     private void StartWave(int waveIndex)
     {
-        if (waveRoutine == null)
+        if (waveRoutine == null && waveIndex < waveConfigs.Length)
         {
-            if (waveIndex >= 0 && waveIndex < waveConfigs.Length)
-            {
-                waveRoutine = StartCoroutine(RunWave(waveConfigs[waveIndex]));
-            }
+            waveRoutine = StartCoroutine(RunWave(waveConfigs[waveIndex]));
         }
     }
 
-    /// <summary>
-    /// WaveConfig に従って敵をスポーン
-    /// </summary>
     private IEnumerator RunWave(WaveConfig config)
     {
         foreach (var enemySet in config.enemies)
         {
             for (int i = 0; i < enemySet.count; i++)
             {
-                // ランダムなスポナー選択
-                EnemySpawner spawner = spawners[Random.Range(0, spawners.Length)];
-
-                // 敵出現
-                spawner.SpawnEnemy(enemySet.prefab);
-
+                spawners[0].SpawnEnemy(enemySet.prefab);
                 yield return new WaitForSeconds(enemySet.interval);
             }
         }
@@ -94,28 +92,43 @@ public class WaveController : MonoBehaviour
         waveRoutine = null;
     }
 
-    /// <summary>
-    /// MiniBoss呼び出し（WaveEventManagerへ委譲）
-    /// </summary>
+    // ============================================================
+    //  MiniBoss呼び出し
+    // ============================================================
     private void CallMiniBoss()
     {
+        if (miniBossCalled) return;
+
         miniBossCalled = true;
 
-        // 雑魚出現OFF
+        // 雑魚の自動湧きは使用しないが念のためOFF
         foreach (var s in spawners)
         {
             s.autoSpawn = false;
         }
 
-        if (WaveEventManager.Instance != null)
-        {
-            WaveEventManager.Instance.ForceStartMiniBoss();
-        }
+        WaveEventManager.Instance?.ForceStartMiniBoss();
     }
 
-    /// <summary>
-    /// リスタート時に必要な初期化
-    /// </summary>
+    // ============================================================
+    //  MiniBoss撃破 → 次Waveへ
+    // ============================================================
+    private void HandleMiniBossCleared()
+    {
+        currentWave++;
+
+        // タイマーを次Waveへ補正
+        timer = currentWave * waveDuration;
+
+        // 再びBoss呼び出し可能に
+        miniBossCalled = false;
+
+        Debug.Log($"[WaveController] MiniBoss cleared → Wave {currentWave + 1}");
+    }
+
+    // ============================================================
+    //  Reset on Restart
+    // ============================================================
     public void ResetWave()
     {
         timer = 0f;
@@ -128,10 +141,8 @@ public class WaveController : MonoBehaviour
             waveRoutine = null;
         }
 
-        // 自動湧きをOFFに戻す
-        foreach (var s in spawners)
-        {
-            s.autoSpawn = false;
-        }
+        WaveEventManager.Instance?.ResetWaveState();
+
+        Debug.Log("[WaveController] ResetWave done.");
     }
 }

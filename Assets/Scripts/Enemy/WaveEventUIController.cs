@@ -20,6 +20,8 @@ public class WaveEventUIController : MonoBehaviour
     {
         if (waveText == null) return;
 
+        waveText.gameObject.SetActive(true);
+
         waveText.text = message;
         waveText.alpha = 1;
         StartCoroutine(FadeOut());
@@ -37,6 +39,7 @@ public class WaveEventUIController : MonoBehaviour
 
         waveText.alpha = 0;
     }
+
     public void HideAll()
     {
         waveText?.gameObject.SetActive(false);
