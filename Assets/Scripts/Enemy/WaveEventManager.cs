@@ -44,7 +44,7 @@ public class WaveEventManager : MonoBehaviour
             return;
         }
         Instance = this;
-}
+    }
 
     private void Start()
     {
@@ -67,6 +67,32 @@ public class WaveEventManager : MonoBehaviour
             Debug.LogError("WaveEventManager: プレイヤーがシーンに見つかりません！");
         }
     }
+    /// <summary>
+    /// WaveController から呼び出す「ミニボス強制開始」
+    /// </summary>
+    public void ForceStartMiniBoss()
+    {
+        // 状態初期化
+        state = WaveState.WaveStart;
+        waveTimer = 0f;
+        waveClearTimer = 0f;
+
+        // ミニボス生成
+        activeBoss = SpawnMiniBoss();
+
+        // Wave開始UI
+        if (ui != null)
+        {
+            ui.ShowWaveStart();
+        }
+
+        // 敵の湧き減衰
+        if (enemySpawner != null)
+        {
+            enemySpawner.spawnRate = originalSpawnRate * spawnReductionRate;
+        }
+    }
+
 
     private void Update()
     {
@@ -93,28 +119,28 @@ public class WaveEventManager : MonoBehaviour
     // ======== Normal ========
     private void UpdateNormal()
     {
-        waveTimer += Time.deltaTime;
+        //waveTimer += Time.deltaTime;
 
-        if (waveTimer >= waveIntervalSeconds)
-        {
-            state = WaveState.WaveStart;
-        }
+        //if (waveTimer >= waveIntervalSeconds)
+        //{
+        //    state = WaveState.WaveStart;
+        //}
     }
 
     // ======== WaveStart ========
     private void UpdateWaveStart()
     {
-        activeBoss = SpawnMiniBoss();
+        //activeBoss = SpawnMiniBoss();
 
-        if (ui != null)
-        {
-            ui.ShowWaveStart();
-        }
+        //if (ui != null)
+        //{
+        //    ui.ShowWaveStart();
+        //}
 
-        if (enemySpawner != null)
-        {
-            enemySpawner.spawnRate = originalSpawnRate * spawnReductionRate;
-        }
+        //if (enemySpawner != null)
+        //{
+        //    enemySpawner.spawnRate = originalSpawnRate * spawnReductionRate;
+        //}
 
         state = WaveState.WaveInProgress;
     }

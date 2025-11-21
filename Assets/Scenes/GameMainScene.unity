@@ -658,6 +658,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHealth: {fileID: 1374674989}
   hpBarFill: {fileID: 1751259755}
+--- !u!1 &333669128
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 333669129}
+  - component: {fileID: 333669130}
+  m_Layer: 0
+  m_Name: WaveController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &333669129
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333669128}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &333669130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333669128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf3dbd1c8b5fc6b4eb285beb440016f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveConfigs:
+  - {fileID: 11400000, guid: 1e9a688fed6f4f443b098c80e3c735ad, type: 2}
+  - {fileID: 11400000, guid: 306dfca5e0d5dc748aa080e0ee379f3a, type: 2}
+  - {fileID: 11400000, guid: 7dc239b9fa6e0b84b8c24e3ffcd480a7, type: 2}
+  waveDuration: 10
+  miniBossTime: 30
+  spawners:
+  - {fileID: 1292265878}
 --- !u!1 &578400286
 GameObject:
   m_ObjectHideFlags: 0
@@ -6096,6 +6148,7 @@ MonoBehaviour:
   spawnRadius: 8
   maxEnemies: 20
   spawnRate: 1
+  autoSpawn: 0
 --- !u!4 &1292265879
 Transform:
   m_ObjectHideFlags: 0
@@ -11486,7 +11539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d7ec797f950a3b4484a679b0b725998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveIntervalSeconds: 10
+  waveIntervalSeconds: 180
   spawnReductionRate: 0
   waveClearWaitSeconds: 1.5
   miniBossPrefabs:
@@ -12127,10 +12180,11 @@ SceneRoots:
   - {fileID: 1374674984}
   - {fileID: 1302209786}
   - {fileID: 1652664234}
+  - {fileID: 333669129}
+  - {fileID: 1601412110}
   - {fileID: 2052587578}
   - {fileID: 1622172411}
   - {fileID: 1342111233}
   - {fileID: 326590976}
   - {fileID: 658726061}
   - {fileID: 1549084059}
-  - {fileID: 1601412110}
