@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47db7d856a514d4aa67e7bc360d69ae, type: 3}
+  m_Name: WaveConfig_06
+  m_EditorClassIdentifier: 
+  enemies:
+  - prefab: {fileID: 4481191993047572964, guid: bd03ba270cbc5344aa45de6e17bf70ed, type: 3}
+    count: 0
+    interval: 0.3
+  - prefab: {fileID: 4481191993047572964, guid: 0a48d54411ba84449b81d03a8457c7f0, type: 3}
+    count: 0
+    interval: 0.8
+  - prefab: {fileID: 4481191993047572964, guid: 56ce3f9fb2f726e4193f84370e00bd3e, type: 3}
+    count: 10
+    interval: 0.6

@@ -10,12 +10,19 @@ public class WaveController : MonoBehaviour
     public float waveDuration = 10f;      // Wave切替時間
     public float miniBossTime = 30f;      // MiniBoss発生時間
 
+    [Header("MiniBoss Settings")]
+    public MiniBossConfig[] miniBossConfigs;
+
+
     [Header("Spawners")]
     public EnemySpawner[] spawners;       // 1つだけでOK（相対座標スポーン）
 
     private float timer = 0f;
     private int currentWave = 0;
     private bool miniBossCalled = false;
+    private int currentMiniBossIndex = 0;
+    private float nextMiniBossTime;
+
 
     private Coroutine waveRoutine;
 
@@ -36,6 +43,7 @@ public class WaveController : MonoBehaviour
         {
             WaveEventManager.Instance.OnMiniBossCleared += HandleMiniBossCleared;
         }
+        nextMiniBossTime = miniBossTime;
     }
 
     private void Update()
@@ -54,7 +62,7 @@ public class WaveController : MonoBehaviour
             }
 
             // MiniBossタイムを越えたらBoss発生
-            if (timer >= miniBossTime)
+            if (timer >= nextMiniBossTime)
             {
                 CallMiniBoss();
             }
@@ -101,29 +109,42 @@ public class WaveController : MonoBehaviour
 
         miniBossCalled = true;
 
-        // 雑魚の自動湧きは使用しないが念のためOFF
+        // 雑魚の自動湧きOFF
         foreach (var s in spawners)
-        {
             s.autoSpawn = false;
-        }
 
-        WaveEventManager.Instance?.ForceStartMiniBoss();
+        // ボスを順番どおり呼び出し
+        WaveEventManager.Instance.ForceStartMiniBoss(miniBossConfigs[currentMiniBossIndex]);
+
+        // 次のボスのインデックス（ループする）
+        currentMiniBossIndex = (currentMiniBossIndex + 1) % miniBossConfigs.Length;
+
+        // 次のボスまでの予定時間を追加
+        nextMiniBossTime += miniBossTime;
     }
+
 
     // ============================================================
     //  MiniBoss撃破 → 次Waveへ
     // ============================================================
     private void HandleMiniBossCleared()
     {
+        // 次のWaveへ進める
         currentWave++;
 
-        // タイマーを次Waveへ補正
+        // Waveタイマーを次のWaveの開始位置に補正
         timer = currentWave * waveDuration;
 
-        // 再びBoss呼び出し可能に
+        // 次のMiniBoss予定時間を再セット
+        nextMiniBossTime = timer + miniBossTime;
+
+        // Boss中フラグ解除
         miniBossCalled = false;
 
-        Debug.Log($"[WaveController] MiniBoss cleared → Wave {currentWave + 1}");
+        // 雑魚スポナー再開
+        foreach (var s in spawners)
+            s.autoSpawn = true;
+
     }
 
     // ============================================================

@@ -7,8 +7,6 @@ public class WaveEventManager : MonoBehaviour
     // ===== MiniBoss =====
     [Header("MiniBoss Settings")]
     [SerializeField] private MiniBossBase[] miniBossPrefabs;
-    [SerializeField] private float miniBossSpawnDistanceMin = 5f;
-    [SerializeField] private float miniBossSpawnDistanceMax = 10f;
 
     // ===== Rewards =====
     [Header("Rewards")]
@@ -45,38 +43,33 @@ public class WaveEventManager : MonoBehaviour
     // ============================================================
     //  Force Start MiniBoss (called from WaveController)
     // ============================================================
-    public void ForceStartMiniBoss()
+    public void ForceStartMiniBoss(MiniBossConfig config)
     {
-        // UI: Wave Start
         ui?.ShowWaveStart();
-
-        // Spawn MiniBoss
-        SpawnMiniBoss();
+        SpawnMiniBoss(config);
     }
-
-    private void SpawnMiniBoss()
+    private void SpawnMiniBoss(MiniBossConfig config)
     {
-        if (player == null || miniBossPrefabs.Length == 0)
+        for (int i = 0; i < config.spawnCount; i++)
         {
-            Debug.LogError("[WaveEventManager] SpawnMiniBoss failed.");
-            return;
+            float distance = Random.Range(config.spawnDistanceMin, config.spawnDistanceMax);
+            float angle = Random.Range(0f, 360f);
+            Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance;
+
+            Vector3 spawnPos = player.transform.position + (Vector3)offset;
+
+            MiniBossBase prefab = config.miniBossPrefabs[Random.Range(0, config.miniBossPrefabs.Length)];
+
+            MiniBossBase boss = Instantiate(prefab, spawnPos, Quaternion.identity);
+
+            // ★ ここを追加！
+            activeBoss = boss;
+
+            boss.Health.OnBossDead += OnMiniBossDead;
         }
-
-        float distance = Random.Range(miniBossSpawnDistanceMin, miniBossSpawnDistanceMax);
-        float angle = Random.Range(0f, 360f);
-        Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance;
-
-        Vector3 spawnPos = player.transform.position + (Vector3)offset;
-
-        // Prefab選択
-        MiniBossBase prefab = miniBossPrefabs[Random.Range(0, miniBossPrefabs.Length)];
-
-        // 実体生成
-        activeBoss = Instantiate(prefab, spawnPos, Quaternion.identity);
-
-        // 死亡イベント登録
-        activeBoss.Health.OnBossDead += OnMiniBossDead;
     }
+
+
 
     // ============================================================
     //  MiniBoss Dead

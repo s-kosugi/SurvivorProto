@@ -9,7 +9,6 @@ public class MiniBossHealth : EnemyHealth
     {
         base.Start();
 
-        // ★★ 重要：ミニボスも EnemyManager に登録する ★★
         EnemyManager.Instance?.RegisterEnemy(this.gameObject);
     }
 
@@ -21,7 +20,7 @@ public class MiniBossHealth : EnemyHealth
         // スコア加算（必要なら調整可）
         GameManager.Instance?.AddScore(score);
 
-        // ★★ EnemyManager から解除 ★★
+        // EnemyManager から解除
         EnemyManager.Instance?.UnregisterEnemy(this.gameObject);
 
         // WaveEventManager に通知

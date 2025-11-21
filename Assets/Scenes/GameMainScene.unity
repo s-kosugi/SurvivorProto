@@ -706,8 +706,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1e9a688fed6f4f443b098c80e3c735ad, type: 2}
   - {fileID: 11400000, guid: 306dfca5e0d5dc748aa080e0ee379f3a, type: 2}
   - {fileID: 11400000, guid: 7dc239b9fa6e0b84b8c24e3ffcd480a7, type: 2}
+  - {fileID: 11400000, guid: 2c022657626a4204496e0f2b6bf02172, type: 2}
+  - {fileID: 11400000, guid: 2c022657626a4204496e0f2b6bf02172, type: 2}
+  - {fileID: 11400000, guid: 103886f2ecc86534aa5fcb17f88c275f, type: 2}
   waveDuration: 10
   miniBossTime: 30
+  miniBossConfigs:
+  - {fileID: 11400000, guid: 3a3b7b38e5241574bb3d5a3b3da26d63, type: 2}
+  - {fileID: 11400000, guid: 00b8904df40d05b4c9b1671afca5f4d1, type: 2}
   spawners:
   - {fileID: 1292265878}
 --- !u!1 &578400286
@@ -6533,7 +6539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c171c920b4fd69648abcc8c5aff6804a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 5
+  maxHP: 100
   invincibleTime: 1
   spriteRenderer: {fileID: 1374674983}
 --- !u!114 &1374674990
@@ -11539,16 +11545,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d7ec797f950a3b4484a679b0b725998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveIntervalSeconds: 180
-  spawnReductionRate: 0
-  waveClearWaitSeconds: 1.5
   miniBossPrefabs:
   - {fileID: 7798026482152090780, guid: 2770538148dccb54aa10e8816d1ceeed, type: 3}
-  miniBossSpawnDistanceMin: 5
-  miniBossSpawnDistanceMax: 10
   hpRecoveryAmount: 100
   ui: {fileID: 1601412111}
-  enemySpawner: {fileID: 1292265878}
 --- !u!1 &1622172407
 GameObject:
   m_ObjectHideFlags: 0
