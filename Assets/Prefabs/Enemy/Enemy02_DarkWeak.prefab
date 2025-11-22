@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -1990998898361678069}
   - component: {fileID: 8921208771264086609}
   - component: {fileID: -3231790365263773972}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Enemy02_DarkWeak
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -166,6 +166,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 3
   score: 10
+  dropper: {fileID: 0}
+  enemyRenderer: {fileID: 4626955109083976971}
 --- !u!114 &-1990998898361678069
 MonoBehaviour:
   m_ObjectHideFlags: 0

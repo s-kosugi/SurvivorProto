@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1626760614051661962}
   - component: {fileID: 4292579499880728318}
   - component: {fileID: 7623523711157552839}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: GhostTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

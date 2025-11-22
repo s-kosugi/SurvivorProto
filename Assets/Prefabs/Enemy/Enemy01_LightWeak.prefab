@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8921208771264086609}
   - component: {fileID: 2794898589408187480}
   - component: {fileID: 4384098530895018852}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Enemy01_LightWeak
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -178,6 +178,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 40
   score: 15
+  dropper: {fileID: 0}
+  enemyRenderer: {fileID: 4626955109083976971}
 --- !u!114 &-1990998898361678069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,7 +253,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831878141713525670}
   - component: {fileID: 1314173621742154927}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ExplosionIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7466391000274364352}
   - component: {fileID: 1059160275867468831}
   - component: {fileID: -1124682463073639363}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: MiniBossMelee
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -117,6 +117,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 30
   score: 100
+  dropper: {fileID: 0}
+  enemyRenderer: {fileID: 3432476060679249362}
 --- !u!114 &5004758022986992020
 MonoBehaviour:
   m_ObjectHideFlags: 0

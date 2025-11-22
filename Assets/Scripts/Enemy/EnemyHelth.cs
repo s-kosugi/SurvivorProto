@@ -3,17 +3,17 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour, IDamageable
 {
     [SerializeField]public int maxHP = 3;
-    [SerializeField] public int score = 10;
+    [SerializeField]public int score = 10;
+    [SerializeField]EnemyDropper dropper;
+    [SerializeField]SpriteRenderer enemyRenderer;
 
     private int currentHP;
     private EffectLibrary effectLibrary;
-    private SpriteRenderer enemyRenderer;
 
     protected virtual void Start()
     {
         currentHP = maxHP;
         effectLibrary = EffectLibrary.Instance;
-        enemyRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void TakeDamage(int damage,AttackType attackType,Vector3 attackerPos)
@@ -40,6 +40,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
     protected virtual void Die()
     {
+        // アイテムドロップ処理
+        if (dropper != null)
+            dropper.ExecuteDrop(transform.position);
+
         GameManager.Instance?.AddScore(score);
         EnemyManager.Instance.UnregisterEnemy(this.gameObject);
         Destroy(gameObject);

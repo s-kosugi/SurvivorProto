@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3515707553177145472}
   - component: {fileID: 7466391000274364352}
   - component: {fileID: 1118707561807154145}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: MiniBoss_Ranged
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,6 +117,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 30
   score: 100
+  dropper: {fileID: 0}
+  enemyRenderer: {fileID: 3432476060679249362}
 --- !u!114 &260130389664186517
 MonoBehaviour:
   m_ObjectHideFlags: 0
