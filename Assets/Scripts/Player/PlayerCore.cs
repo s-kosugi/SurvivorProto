@@ -4,6 +4,7 @@ public class PlayerCore : MonoBehaviour
 {
     public Transform body;  // プレイヤーの Transform
     public PlayerExpCollector expCollector;
+    public PlayerHealth health;
 
     private void Awake()
     {

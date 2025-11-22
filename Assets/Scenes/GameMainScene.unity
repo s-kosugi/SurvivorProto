@@ -6666,7 +6666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c171c920b4fd69648abcc8c5aff6804a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 100
+  maxHP: 10
   invincibleTime: 1
   spriteRenderer: {fileID: 1374674983}
 --- !u!114 &1374674990
@@ -6768,6 +6768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 1374674984}
   expCollector: {fileID: 1374674993}
+  health: {fileID: 1374674989}
 --- !u!1 &1425623944
 GameObject:
   m_ObjectHideFlags: 0
