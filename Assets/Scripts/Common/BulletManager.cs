@@ -15,6 +15,7 @@ public class BulletManager : MonoBehaviour
     // 弾を登録
     public void RegisterBullet(GameObject bullet)
     {
+        bullet.transform.SetParent(this.transform);
         bullets.Add(bullet);
     }
 
