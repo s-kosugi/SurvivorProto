@@ -8,6 +8,7 @@ public class EffectLibrary : MonoBehaviour
     [SerializeField] private GameObject meleeHitEffectPrefab;
     [SerializeField] private GameObject bulletHitEffectPrefab;
     [SerializeField] private GameObject slashEffectPrefab;
+    [SerializeField] private GameObject expPickupEffectPrefab;
 
     private Transform effectRoot;
 
@@ -36,6 +37,7 @@ public class EffectLibrary : MonoBehaviour
             EffectType.MeleeHit => meleeHitEffectPrefab,
             EffectType.ShotHit => bulletHitEffectPrefab,
             EffectType.Slash => slashEffectPrefab,
+            EffectType.ExpPickup => expPickupEffectPrefab,
             _ => null
         };
 

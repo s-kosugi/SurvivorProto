@@ -4,7 +4,6 @@ public class ExpItem : ItemBase
 {
     [Header("Components")]
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private GameObject pickupEffectPrefab;
 
     [Header("Exp Value")]
     [SerializeField] private int expValue = 1;
@@ -30,18 +29,10 @@ public class ExpItem : ItemBase
         }
 
         // 取得エフェクト生成（Prefab が設定されている場合のみ）
-        if (pickupEffectPrefab != null)
-        {
-            Instantiate(
-                pickupEffectPrefab,
-                transform.position,
-                Quaternion.identity
-            );
-        }
-        else
-        {
-            Debug.LogWarning($"{name}: pickupEffectPrefab が設定されていません！");
-        }
+        EffectLibrary.Instance.SpawnEffect(
+            EffectType.ExpPickup,
+            transform.position
+        );
 
         // アイテム消去
         Destroy(gameObject);

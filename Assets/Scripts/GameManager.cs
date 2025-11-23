@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
         BulletManager.Instance?.ClearAllBullets();
         // Wave初期化
         WaveController.Instance?.ResetWave();
+        // アイテム初期化
+        ItemManager.Instance?.ClearAll();
+        // エフェクト初期化
+        EffectLibrary.Instance?.ClearAllEffects();
+
 
         // スコア初期化
         score = 0;
