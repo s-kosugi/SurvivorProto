@@ -162,4 +162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 15
+  rb: {fileID: 8142616020943755371}
+  pickupEffectPrefab: {fileID: 7347302775788399188, guid: 274d582d37f90404a89a9cfc100413b6, type: 3}
   expValue: 1
