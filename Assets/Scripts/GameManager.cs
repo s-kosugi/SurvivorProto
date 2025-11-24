@@ -30,6 +30,10 @@ public class GameManager : MonoBehaviour
 
         state = GameState.Init;
         Time.timeScale = 1f;
+
+        // TODO:とりあえずBGM再生
+        SoundManager.Instance.PlayBGM("Stage1");
+
     }
 
     void Start()

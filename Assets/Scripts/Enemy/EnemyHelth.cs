@@ -23,6 +23,14 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         // 攻撃タイプに応じたエフェクト生成
         effectType = EffectLibrary.Instance.GetDamageEffectType(attackType);
+        switch( attackType )
+        {
+            case AttackType.Melee:
+                SoundManager.Instance.PlaySE("MeleeHit");
+                break;
+            default:
+                break;
+        }
 
         // 攻撃と敵の間にヒットエフェクトを生成
         Vector3 center = (transform.position + attackerPos) * 0.5f;

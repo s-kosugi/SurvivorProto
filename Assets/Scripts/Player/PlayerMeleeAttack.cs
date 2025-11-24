@@ -168,6 +168,7 @@ public class PlayerMeleeAttack : MonoBehaviour
         // エフェクト生成
         if (attackEffectPrefab != null)
         {
+            SoundManager.Instance.PlaySE("MeleeAttack");
             var fx = Instantiate(attackEffectPrefab, attackPos, Quaternion.identity);
 
             // 段階ごとに拡大
