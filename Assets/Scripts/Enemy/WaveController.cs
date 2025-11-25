@@ -48,6 +48,10 @@ public class WaveController : MonoBehaviour
 
     private void Update()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
+
         timer += Time.deltaTime;
 
         // ===== Wave進行 =====

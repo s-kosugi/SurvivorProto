@@ -40,6 +40,10 @@ public class PlayerShooting : MonoBehaviour
     /// </summary>
     void TryShoot()
     {
+        // ゲームがプレイ状態でなければ撃たない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
+
         if (Time.time < nextShootTime) return;
         nextShootTime = Time.time + shootCooldown;
 
@@ -49,7 +53,7 @@ public class PlayerShooting : MonoBehaviour
         }
         else
         {
-            ShootDark();  // 後で追加する
+            ShootDark();
         }
     }
 

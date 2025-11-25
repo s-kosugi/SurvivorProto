@@ -26,6 +26,9 @@ public class ExpSuckParticles : MonoBehaviour
 
     private void LateUpdate()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
         // プレイヤー再取得
         if (playerTarget == null)
         {

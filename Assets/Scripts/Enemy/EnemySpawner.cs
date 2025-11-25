@@ -17,7 +17,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = PlayerManager.Instance.MainPlayer.transform;
 
         if (player == null)
         {
@@ -27,6 +27,9 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
         // 自動スポーンをオフにしている場合は何もしない
         if (!autoSpawn) return;
 

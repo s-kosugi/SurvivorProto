@@ -49,6 +49,9 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
         transform.Translate(_dir * speed * Time.deltaTime, Space.World);
 
         // ---------------------------
@@ -70,6 +73,10 @@ public class Bullet : MonoBehaviour
     // --------------------------------------------------------
     void OnTriggerEnter2D(Collider2D other)
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
+
         if (owner == BulletOwner.Player)
         {
             // 光弱点

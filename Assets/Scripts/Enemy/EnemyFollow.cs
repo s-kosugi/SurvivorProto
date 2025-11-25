@@ -5,21 +5,24 @@ public class EnemyFollow : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private SpriteRenderer spriteRenderer;
-
-    private Rigidbody2D rb;
+    [SerializeField] Rigidbody2D rb;
     private Transform player;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        // Playerタグを持つオブジェクトを検索
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        // PlayerPlayerObjectを取得
+        GameObject playerObj = PlayerManager.Instance.MainPlayer.gameObject;
+        
         if (playerObj != null)
             player = playerObj.transform;
     }
 
     void FixedUpdate()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
+
         if (player == null) return;
 
         // プレイヤーへの方向

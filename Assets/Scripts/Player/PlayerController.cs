@@ -60,6 +60,9 @@ public class PlayerController : MonoBehaviour
 
     private void SwitchMode()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
         if (isMeleeAttacking) return; // 攻撃中は切り替え禁止
 
         ModeState = (ModeState == PlayerModeState.Light)
@@ -92,6 +95,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
+
         // 攻撃中は入力値を 0 にする
         moveInput = isMeleeAttacking ? Vector2.zero : controls.Player.Move.ReadValue<Vector2>();
 

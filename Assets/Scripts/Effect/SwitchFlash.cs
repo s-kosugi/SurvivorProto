@@ -6,17 +6,19 @@ public class SwitchFlash : MonoBehaviour
     public float startScale = 0.2f;
     public float endScale = 1.2f;
 
-    private SpriteRenderer sr;
+    [SerializeField]private SpriteRenderer sr;
     private float timer;
 
     void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();
         transform.localScale = Vector3.one * startScale;
     }
 
     void Update()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
         timer += Time.deltaTime;
         float t = timer / duration;
 

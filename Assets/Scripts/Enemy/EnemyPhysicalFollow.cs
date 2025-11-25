@@ -15,13 +15,15 @@ public class EnemyPhysicalFollow : MonoBehaviour
 
     void Start()
     {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-            player = playerObj.transform;
+        // Player位置取得
+        player = PlayerManager.Instance.MainPlayer.transform;
     }
 
     void FixedUpdate()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
         if (!EnableFollow) return;
         if (player == null) return;
 

@@ -20,12 +20,8 @@ public class EnemyExplosionAttack : MonoBehaviour
 
     private void Start()
     {
-        // 暫定プレイヤー取得（後でManager経由へ）
-        if (player == null)
-        {
-            var p = GameObject.FindGameObjectWithTag("Player");
-            if (p != null) player = p.transform;
-        }
+        // プレイヤー取得
+        player = PlayerManager.Instance.MainPlayer.transform;
 
         if (explosionIndicator != null)
         {
@@ -38,6 +34,9 @@ public class EnemyExplosionAttack : MonoBehaviour
 
     private void Update()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
         if (player == null) return;
 
         float dist = Vector2.Distance(transform.position, player.position);
@@ -75,7 +74,7 @@ public class EnemyExplosionAttack : MonoBehaviour
             float currentDist = Vector2.Distance(transform.position, player.position);
             if (currentDist < explosionRange)
             {
-                player.GetComponent<PlayerHealth>()?.TakeDamage(
+                PlayerManager.Instance.MainPlayer.health?.TakeDamage(
                     explosionDamage,
                     AttackType.Explosion,
                     transform.position

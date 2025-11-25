@@ -44,11 +44,15 @@ public class MiniBossMelee : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = PlayerManager.Instance.MainPlayer.transform;
     }
 
     void Update()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
+
         if (player == null) return;
 
         stateTimer += Time.deltaTime;

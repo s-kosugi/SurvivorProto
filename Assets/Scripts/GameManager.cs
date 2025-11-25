@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     private GameState state = GameState.Init;
+    public GameState State => state;
     private int score = 0;
 
     void Awake()

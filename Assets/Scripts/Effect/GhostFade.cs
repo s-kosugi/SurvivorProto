@@ -8,6 +8,9 @@ public class GhostFade : MonoBehaviour
 
     private void Update()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
         timer += Time.deltaTime;
         float t = timer / life;
 

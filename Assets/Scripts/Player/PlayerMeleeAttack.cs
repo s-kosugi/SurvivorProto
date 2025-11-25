@@ -84,6 +84,10 @@ public class PlayerMeleeAttack : MonoBehaviour
     }
     private void OnAttackInput()
     {
+        // ゲームがプレイ状態でなければできない
+        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+            return;
+
         if (playerController.ModeState == PlayerModeState.Light) return;
 
         // 攻撃中なら予約

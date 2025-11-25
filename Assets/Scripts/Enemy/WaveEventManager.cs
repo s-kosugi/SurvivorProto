@@ -18,7 +18,7 @@ public class WaveEventManager : MonoBehaviour
 
     // ===== Internal =====
     private MiniBossBase activeBoss;
-    private PlayerController player;
+    private PlayerCore player;
 
     // ===== Callbacks =====
     public System.Action OnMiniBossCleared;   // WaveController へ通知
@@ -35,7 +35,7 @@ public class WaveEventManager : MonoBehaviour
 
     private void Start()
     {
-        player = FindObjectOfType<PlayerController>();
+        player = PlayerManager.Instance.MainPlayer;
         if (player == null)
             Debug.LogError("[WaveEventManager] Player not found!");
     }
@@ -61,8 +61,6 @@ public class WaveEventManager : MonoBehaviour
             MiniBossBase prefab = config.miniBossPrefabs[Random.Range(0, config.miniBossPrefabs.Length)];
 
             MiniBossBase boss = Instantiate(prefab, spawnPos, Quaternion.identity);
-
-            // ★ ここを追加！
             activeBoss = boss;
 
             boss.Health.OnBossDead += OnMiniBossDead;
@@ -81,7 +79,7 @@ public class WaveEventManager : MonoBehaviour
             activeBoss = null;
 
             // 回復
-            player?.Health.RecoverHP(hpRecoveryAmount);
+            player?.health.RecoverHP(hpRecoveryAmount);
 
             // UI
             ui?.ShowWaveClear();

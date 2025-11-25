@@ -100,3 +100,4 @@ MonoBehaviour:
   duration: 0.2
   startScale: 0.2
   endScale: 1.2
+  sr: {fileID: 7341736066780144856}

@@ -24,7 +24,7 @@ public class MiniBossRanged : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = PlayerManager.Instance.MainPlayer.transform;
     }
 
     void Update()
@@ -34,14 +34,14 @@ public class MiniBossRanged : MonoBehaviour
         danmakuTimer += Time.deltaTime;
         aimTimer += Time.deltaTime;
 
-        // ★ 常時8WAY弾幕
+        // 常時nWAY弾幕
         if (danmakuTimer >= danmakuInterval)
         {
             danmakuTimer = 0f;
             FireDanmaku();
         }
 
-        // ★ プレイヤー狙撃弾
+        // プレイヤー狙撃弾
         if (aimTimer >= aimInterval)
         {
             aimTimer = 0f;
@@ -53,7 +53,7 @@ public class MiniBossRanged : MonoBehaviour
     }
 
     // ------------------------------------------------------
-    // ★ 8WAY 弾幕
+    // NWAY 弾幕
     // ------------------------------------------------------
     void FireDanmaku()
     {
@@ -73,7 +73,7 @@ public class MiniBossRanged : MonoBehaviour
     }
 
     // ------------------------------------------------------
-    // ★ プレイヤー狙撃弾
+    // プレイヤー狙撃弾
     // ------------------------------------------------------
     void FireAimShot()
     {
