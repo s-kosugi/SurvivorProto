@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Animator animator;
+    [SerializeField] private PlayerVisuals playerVisuals;
     [SerializeField] private PlayerController controller;
 
     private Vector2 moveInput = Vector2.zero;
@@ -40,13 +40,13 @@ public class PlayerMovement : MonoBehaviour
             moveInput = controls.Player.Move.ReadValue<Vector2>();
         }
 
-        animator.SetFloat("MoveSpeed", moveInput.magnitude);
+        playerVisuals.UpdateMoveAnimation(moveInput.magnitude);
 
         // 向きの更新
         if (moveInput.x > 0.01f) lastMoveDir = Vector2.right;
         else if (moveInput.x < -0.01f) lastMoveDir = Vector2.left;
 
-        animator.SetBool("IsFacingLeft", IsFacingLeft);
+        playerVisuals.UpdateFacing(IsFacingLeft);
     }
 
     void FixedUpdate()

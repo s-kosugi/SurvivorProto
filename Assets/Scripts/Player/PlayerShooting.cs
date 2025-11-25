@@ -11,8 +11,6 @@ public class PlayerShooting : MonoBehaviour
 
     [Header("Shoot Settings")]
     [SerializeField] private float shootCooldown = 0.3f;
-    [SerializeField] private float spreadAngle = 90f; 
-    [SerializeField] private int spreadCount = 8;
 
     private float nextShootTime;
 

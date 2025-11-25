@@ -1,33 +1,22 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     public PlayerModeState ModeState { get; private set; } = PlayerModeState.Light;
     public PlayerHealth Health => health;
 
+    [Header("References")]
     [SerializeField] private PlayerHealth health;
-    [SerializeField] private Animator animator;
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerVisuals visuals; // ← 追加：見た目を専用クラスに委譲
 
     // ========================
     // モード切替設定
     // ========================
     [Header("ModeChange")]
-    [SerializeField] private float switchCooldown = 1.0f; 
+    [SerializeField] private float switchCooldown = 1.0f;
     [SerializeField] private float switchLag = 0.3f;
-
-    // ========================
-    // 見た目用
-    // ========================
-    [Header("Mode Effects")]
-    [SerializeField] private GameObject lightAura;
-    [SerializeField] private GameObject darkAura;
-    [SerializeField] private GameObject switchEffectPrefab;
-    [SerializeField] private GameObject lightFlashPrefab;
-    [SerializeField] private GameObject darkFlashPrefab;
 
     // ========================
     // ステータス
@@ -37,19 +26,21 @@ public class PlayerController : MonoBehaviour
     public float darkMoveSpeed = 7f;
 
     private float currentMoveSpeed = 5f;
-    public float CurrentMoveSpeed => currentMoveSpeed;   // ← Movement側が参照
+    public float CurrentMoveSpeed => currentMoveSpeed;   // Movement側が参照
 
     // ========================
     // 状態制御
     // ========================
     private PlayerControls controls;
-    private List<GameObject> spawnedEffects = new List<GameObject>();
 
     private bool isMeleeAttacking = false;
     private bool isSwitching = false;
     private float lastSwitchTime = -999f;
 
 
+    // ======================================================
+    // 初期化
+    // ======================================================
     void Awake()
     {
         controls = new PlayerControls();
@@ -61,24 +52,25 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         ApplyModeStats();
+        visuals.ApplyModeVisual(ModeState); // 初期適用
     }
 
     void OnEnable()
     {
         controls.Enable();
-        controls.Player.ElementalSwitch.performed += _ => SwitchMode();
+        controls.Player.ElementalSwitch.performed += _ => TrySwitchMode();
     }
 
     void OnDisable()
     {
-        controls.Player.ElementalSwitch.performed -= _ => SwitchMode();
+        controls.Player.ElementalSwitch.performed -= _ => TrySwitchMode();
         controls.Disable();
     }
 
     // ======================================================
     // モード切替
     // ======================================================
-    private void SwitchMode()
+    private void TrySwitchMode()
     {
         if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
             return;
@@ -94,7 +86,7 @@ public class PlayerController : MonoBehaviour
         isSwitching = true;
         lastSwitchTime = Time.time;
 
-        // 移動停止
+        // 移動停止（Movementに委譲）
         playerMovement.MoveStop();
 
         // 状態切替
@@ -102,29 +94,16 @@ public class PlayerController : MonoBehaviour
             ? PlayerModeState.Dark
             : PlayerModeState.Light;
 
-        ApplyModeVisual();
+        // 見た目は Visuals に委譲
+        visuals.ApplyModeVisual(ModeState);
+
+        // ステータス反映
         ApplyModeStats();
 
         // ラグ
         yield return new WaitForSeconds(switchLag);
 
         isSwitching = false;
-    }
-
-    // ======================================================
-    // 見た目変更
-    // ======================================================
-    private void ApplyModeVisual()
-    {
-        lightAura.SetActive(ModeState == PlayerModeState.Light);
-        darkAura.SetActive(ModeState == PlayerModeState.Dark);
-
-        var fxPrefab = (ModeState == PlayerModeState.Light)
-            ? lightFlashPrefab
-            : darkFlashPrefab;
-
-        var fx = Instantiate(fxPrefab, transform.position, Quaternion.identity);
-        spawnedEffects.Add(fx);
     }
 
     // ======================================================
@@ -165,12 +144,12 @@ public class PlayerController : MonoBehaviour
 
         return true;
     }
-    /// <summary>
-    /// 移動できるか？
-    /// </summary>
+
+    // ======================================================
+    // 移動できるか？
+    // ======================================================
     public bool CanMove()
     {
-        // 切替中・攻撃中は移動禁止
         if (isSwitching) return false;
         if (isMeleeAttacking) return false;
 
@@ -184,19 +163,6 @@ public class PlayerController : MonoBehaviour
     {
         EndMeleeAttack();
         playerMovement.MoveStop();
-        animator.SetFloat("MoveSpeed", 0f);
-        ClearAllEffects();
-    }
-
-    public void ClearAllEffects()
-    {
-        lightAura.SetActive(false);
-        darkAura.SetActive(false);
-
-        foreach (var fx in spawnedEffects)
-        {
-            if (fx != null) Destroy(fx);
-        }
-        spawnedEffects.Clear();
+        visuals.ClearAllEffects();
     }
 }

@@ -7170,6 +7170,7 @@ GameObject:
   - component: {fileID: 1374674985}
   - component: {fileID: 1374674994}
   - component: {fileID: 1374674987}
+  - component: {fileID: 1374674996}
   - component: {fileID: 1374674995}
   - component: {fileID: 1374674988}
   - component: {fileID: 1374674989}
@@ -7340,15 +7341,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: {fileID: 1374674989}
-  animator: {fileID: 1374674991}
   playerMovement: {fileID: 1374674995}
+  visuals: {fileID: 1374674996}
   switchCooldown: 1
   switchLag: 0.3
-  lightAura: {fileID: 1425623944}
-  darkAura: {fileID: 871010864}
-  switchEffectPrefab: {fileID: 4097512810353927468, guid: ba79b6af6bc4eaa4c89a73464ca6dcf1, type: 3}
-  lightFlashPrefab: {fileID: 4097512810353927468, guid: ba79b6af6bc4eaa4c89a73464ca6dcf1, type: 3}
-  darkFlashPrefab: {fileID: 7079655572318042560, guid: b892861e8f0c0974ca8c4cb5c5efb92b, type: 3}
   lightMoveSpeed: 5
   darkMoveSpeed: 7
 --- !u!114 &1374674988
@@ -7368,8 +7364,6 @@ MonoBehaviour:
   playerController: {fileID: 1374674987}
   core: {fileID: 1374674994}
   shootCooldown: 0.3
-  spreadAngle: 45
-  spreadCount: 8
 --- !u!114 &1374674989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7502,8 +7496,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1374674986}
-  animator: {fileID: 1374674991}
+  playerVisuals: {fileID: 1374674996}
   controller: {fileID: 1374674987}
+--- !u!114 &1374674996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374674982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89e5c0cfd6cc57642b2d0cf577e11101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightAura: {fileID: 1425623944}
+  darkAura: {fileID: 871010864}
+  lightFlashPrefab: {fileID: 4097512810353927468, guid: ba79b6af6bc4eaa4c89a73464ca6dcf1, type: 3}
+  darkFlashPrefab: {fileID: 7079655572318042560, guid: b892861e8f0c0974ca8c4cb5c5efb92b, type: 3}
+  animator: {fileID: 1374674991}
 --- !u!1 &1425623944
 GameObject:
   m_ObjectHideFlags: 0
