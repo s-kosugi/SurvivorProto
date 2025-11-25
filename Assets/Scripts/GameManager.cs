@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] PlayerCore core;
     [SerializeField] ScoreUI scoreUI;
     [SerializeField] private GameOverUI gameOverUI;
+    [SerializeField] private WaveEventUIController waveEventUIController;
 
     public static GameManager Instance { get; private set; }
 
@@ -44,10 +45,10 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // 敵・弾・アイテム・エフェクト初期化
-        EnemyManager.Instance?.ClearAllEnemies();
         WaveEventManager.Instance?.ResetWaveState();
-        BulletManager.Instance?.ClearAllBullets();
         WaveController.Instance?.ResetWave();
+        EnemyManager.Instance?.ClearAllEnemies();
+        BulletManager.Instance?.ClearAllBullets();
         ItemManager.Instance?.ClearAll();
         EffectLibrary.Instance?.ClearAllEffects();
 
@@ -64,6 +65,7 @@ public class GameManager : MonoBehaviour
         core.health.ResetHealth();
 
         gameOverUI.Hide();
+        waveEventUIController.ResetUI();
     }
 
     public void EndGame()

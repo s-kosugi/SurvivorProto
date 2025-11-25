@@ -12,16 +12,14 @@ public class WaveEventManager : MonoBehaviour
     [Header("Rewards")]
     [SerializeField] private int hpRecoveryAmount = 100;
 
-    // ===== UI =====
-    [Header("UI")]
-    [SerializeField] private WaveEventUIController ui;
-
     // ===== Internal =====
     private MiniBossBase activeBoss;
     private PlayerCore player;
 
     // ===== Callbacks =====
     public System.Action OnMiniBossCleared;   // WaveController へ通知
+    public System.Action OnMiniBossStart;
+
 
     private void Awake()
     {
@@ -45,7 +43,7 @@ public class WaveEventManager : MonoBehaviour
     // ============================================================
     public void ForceStartMiniBoss(MiniBossConfig config)
     {
-        ui?.ShowWaveStart();
+        OnMiniBossStart?.Invoke();
         SpawnMiniBoss(config);
     }
     private void SpawnMiniBoss(MiniBossConfig config)
@@ -81,14 +79,11 @@ public class WaveEventManager : MonoBehaviour
             // 回復
             player?.health.RecoverHP(hpRecoveryAmount);
 
-            // UI
-            ui?.ShowWaveClear();
+            // ウェーブクリア通知
+            OnMiniBossCleared?.Invoke();
 
             // 弾クリア
             BulletManager.Instance?.ClearAllBullets();
-
-            // WaveControllerへ通知
-            OnMiniBossCleared?.Invoke();
         }
     }
 
@@ -98,8 +93,6 @@ public class WaveEventManager : MonoBehaviour
     public void ResetWaveState()
     {
         activeBoss = null;
-
-        ui?.HideAll();
 
         Debug.Log("[WaveEventManager] ResetWaveState done.");
     }
