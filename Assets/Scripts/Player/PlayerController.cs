@@ -1,6 +1,6 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerHealth health;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
+    [Header("ModeChange")]
+    [SerializeField] private float switchCooldown = 1.0f; // 切替後のクールダウン
+    [SerializeField] private float switchLag = 0.3f;      // 切替中は硬直する（動けない・攻撃できない）
 
     [Header("Mode Effects")]
     [SerializeField] private GameObject lightAura;
@@ -30,6 +33,10 @@ public class PlayerController : MonoBehaviour
     public bool IsFacingLeft {get; private set; }
     // 近接攻撃中かどうか
     private bool isMeleeAttacking = false;
+
+    // モード切替用
+    private bool isSwitching = false;
+    private float lastSwitchTime = -999f;
 
 
     void Awake()
@@ -60,18 +67,45 @@ public class PlayerController : MonoBehaviour
 
     private void SwitchMode()
     {
-        // ゲームがプレイ状態でなければできない
         if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
             return;
-        if (isMeleeAttacking) return; // 攻撃中は切り替え禁止
 
+        // 攻撃中は切替禁止
+        if (isMeleeAttacking) return;
+
+        // クールダウン中は切替禁止
+        if (Time.time - lastSwitchTime < switchCooldown) return;
+
+        // 切替開始
+        StartCoroutine(DoSwitchMode());
+    }
+
+    private IEnumerator DoSwitchMode()
+    {
+        isSwitching = true;
+        lastSwitchTime = Time.time;
+
+        // 切替中は移動不可・攻撃不可
+        rb.velocity = Vector2.zero;
+        moveInput = Vector2.zero;
+
+        // 見た目・ステータス反映
         ModeState = (ModeState == PlayerModeState.Light)
             ? PlayerModeState.Dark
             : PlayerModeState.Light;
 
         ApplyModeVisual();
         ApplyModeStats();
+
+        // ここでSE（後で入れる）
+        // SoundManager.Instance.PlaySE("ModeSwitch");
+
+        // ラグ（硬直時間）
+        yield return new WaitForSeconds(switchLag);
+
+        isSwitching = false;
     }
+
 
     private void ApplyModeVisual()
     {
@@ -98,6 +132,8 @@ public class PlayerController : MonoBehaviour
         // ゲームがプレイ状態でなければできない
         if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
             return;
+        // モード切替中移動不可
+        if (isSwitching) return;
 
         // 攻撃中は入力値を 0 にする
         moveInput = isMeleeAttacking ? Vector2.zero : controls.Player.Move.ReadValue<Vector2>();
@@ -118,6 +154,8 @@ public class PlayerController : MonoBehaviour
     {
         // 攻撃中は一切移動させない
         if (isMeleeAttacking) return;
+        // モード切替中移動不可
+        if (isSwitching) return;
 
         rb.MovePosition(rb.position + moveInput * currentMoveSpeed * Time.fixedDeltaTime);
     }
@@ -134,6 +172,23 @@ public class PlayerController : MonoBehaviour
     {
         isMeleeAttacking = false;
     }
+    /// <summary>
+    /// 攻撃できるかどうか
+    /// </summary>
+    /// <returns></returns>
+    public bool CanAttack()
+    {
+        if (isSwitching) return false;
+        if (isMeleeAttacking) return false;
+
+        if (GameManager.Instance == null ||
+            GameManager.Instance.State != GameState.Playing)
+            return false;
+
+        return true;
+    }
+
+
     private void HandlePlayerDeath()
     {
         EndMeleeAttack();

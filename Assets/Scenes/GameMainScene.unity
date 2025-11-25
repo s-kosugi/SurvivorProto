@@ -7341,6 +7341,8 @@ MonoBehaviour:
   health: {fileID: 1374674989}
   rb: {fileID: 1374674986}
   animator: {fileID: 1374674991}
+  switchCooldown: 1
+  switchLag: 0.3
   lightAura: {fileID: 1425623944}
   darkAura: {fileID: 871010864}
   switchEffectPrefab: {fileID: 4097512810353927468, guid: ba79b6af6bc4eaa4c89a73464ca6dcf1, type: 3}

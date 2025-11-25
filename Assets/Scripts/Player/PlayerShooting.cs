@@ -40,8 +40,8 @@ public class PlayerShooting : MonoBehaviour
     /// </summary>
     void TryShoot()
     {
-        // ゲームがプレイ状態でなければ撃たない
-        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
+        // まず PlayerController 側に問い合わせ
+        if (!playerController.CanAttack())
             return;
 
         if (Time.time < nextShootTime) return;
