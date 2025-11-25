@@ -38,13 +38,20 @@ public class WaveController : MonoBehaviour
 
     private void Start()
     {
-        // MiniBoss撃破イベント受信
-        if (WaveEventManager.Instance != null)
-        {
-            WaveEventManager.Instance.OnMiniBossCleared += HandleMiniBossCleared;
-        }
         nextMiniBossTime = miniBossTime;
     }
+    private void OnEnable()
+    {
+        if (WaveEventManager.Instance != null)
+            WaveEventManager.Instance.OnMiniBossCleared += HandleMiniBossCleared;
+    }
+
+    private void OnDisable()
+    {
+        if (WaveEventManager.Instance != null)
+            WaveEventManager.Instance.OnMiniBossCleared -= HandleMiniBossCleared;
+    }
+
 
     private void Update()
     {
@@ -156,18 +163,33 @@ public class WaveController : MonoBehaviour
     // ============================================================
     public void ResetWave()
     {
+        // Reset timer & wave index
         timer = 0f;
         currentWave = 0;
-        miniBossCalled = false;
 
+        // 次のMiniBoss発生予定時間をリセット
+        nextMiniBossTime = miniBossTime;
+        // MiniBossの出現インデックス（ループ）を初期化
+        currentMiniBossIndex = 0;
+        // Boss中フラグ解除
+        miniBossCalled = false;
+        // 自動スポーンを確実にONに戻す
+        foreach (var s in spawners)
+            s.autoSpawn = true;
+        // WaveRoutine停止
         if (waveRoutine != null)
         {
             StopCoroutine(waveRoutine);
             waveRoutine = null;
         }
-
+        // WaveEventManager側のリセット処理
         WaveEventManager.Instance?.ResetWaveState();
+        // イベント処理安全対策
+        WaveEventManager.Instance.OnMiniBossCleared -= HandleMiniBossCleared;
+        WaveEventManager.Instance.OnMiniBossCleared += HandleMiniBossCleared;
 
-        Debug.Log("[WaveController] ResetWave done.");
+
+        Debug.Log("[WaveController] ResetWave (full) done.");
     }
+
 }
