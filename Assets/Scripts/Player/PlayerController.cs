@@ -9,14 +9,8 @@ public class PlayerController : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerHealth health;
     [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private PlayerVisuals visuals; // ← 追加：見た目を専用クラスに委譲
-
-    // ========================
-    // モード切替設定
-    // ========================
-    [Header("ModeChange")]
-    [SerializeField] private float switchCooldown = 1.0f;
-    [SerializeField] private float switchLag = 0.3f;
+    [SerializeField] private PlayerVisuals visuals; // 見た目を専用クラスに委譲
+    [SerializeField] private PlayerModeSwitcher switcher;
 
     // ========================
     // ステータス
@@ -34,9 +28,6 @@ public class PlayerController : MonoBehaviour
     private PlayerControls controls;
 
     private bool isMeleeAttacking = false;
-    private bool isSwitching = false;
-    private float lastSwitchTime = -999f;
-
 
     // ======================================================
     // 初期化
@@ -53,57 +44,6 @@ public class PlayerController : MonoBehaviour
     {
         ApplyModeStats();
         visuals.ApplyModeVisual(ModeState); // 初期適用
-    }
-
-    void OnEnable()
-    {
-        controls.Enable();
-        controls.Player.ElementalSwitch.performed += _ => TrySwitchMode();
-    }
-
-    void OnDisable()
-    {
-        controls.Player.ElementalSwitch.performed -= _ => TrySwitchMode();
-        controls.Disable();
-    }
-
-    // ======================================================
-    // モード切替
-    // ======================================================
-    private void TrySwitchMode()
-    {
-        if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
-            return;
-
-        if (isMeleeAttacking) return;
-        if (Time.time - lastSwitchTime < switchCooldown) return;
-
-        StartCoroutine(DoSwitchMode());
-    }
-
-    private IEnumerator DoSwitchMode()
-    {
-        isSwitching = true;
-        lastSwitchTime = Time.time;
-
-        // 移動停止（Movementに委譲）
-        playerMovement.MoveStop();
-
-        // 状態切替
-        ModeState = (ModeState == PlayerModeState.Light)
-            ? PlayerModeState.Dark
-            : PlayerModeState.Light;
-
-        // 見た目は Visuals に委譲
-        visuals.ApplyModeVisual(ModeState);
-
-        // ステータス反映
-        ApplyModeStats();
-
-        // ラグ
-        yield return new WaitForSeconds(switchLag);
-
-        isSwitching = false;
     }
 
     // ======================================================
@@ -129,13 +69,30 @@ public class PlayerController : MonoBehaviour
     {
         isMeleeAttacking = false;
     }
-
-    // ======================================================
-    // 攻撃できるか？
-    // ======================================================
-    public bool CanAttack()
+    /// <summary>
+    /// モード切替
+    /// </summary>
+    public void ToggleMode()
     {
-        if (isSwitching) return false;
+        ModeState = (ModeState == PlayerModeState.Light)
+            ? PlayerModeState.Dark
+            : PlayerModeState.Light;
+    }
+    /// <summary>
+    /// 各モードスピード設定
+    /// </summary>
+    public void ApplyModeStatsFromOutside()
+    {
+        currentMoveSpeed = (ModeState == PlayerModeState.Light)
+            ? lightMoveSpeed
+            : darkMoveSpeed;
+    }
+    /// <summary>
+    /// 行動できるかどうか？
+    /// </summary>
+    private bool CanAction()
+    {
+        if (switcher.IsSwitching) return false;
         if (isMeleeAttacking) return false;
 
         if (GameManager.Instance == null ||
@@ -145,15 +102,28 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
-    // ======================================================
-    // 移動できるか？
-    // ======================================================
+    /// <summary>
+    /// 攻撃できるかどうか
+    /// </summary>
+    public bool CanAttack()
+    {
+        return CanAction();
+    }
+
+    /// <summary>
+    /// 移動できるかどか
+    /// </summary>
     public bool CanMove()
     {
-        if (isSwitching) return false;
-        if (isMeleeAttacking) return false;
-
-        return GameManager.Instance.State == GameState.Playing;
+        return CanAction();
+    }
+    /// <summary>
+    /// モード切替できるかどうか
+    /// </summary>
+    public bool CanSwitchMode()
+    {
+        // モード切替できるか
+        return CanAction();
     }
 
     // ======================================================

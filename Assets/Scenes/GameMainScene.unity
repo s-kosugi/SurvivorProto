@@ -7175,6 +7175,7 @@ GameObject:
   - component: {fileID: 1374674988}
   - component: {fileID: 1374674989}
   - component: {fileID: 1374674990}
+  - component: {fileID: 1374674997}
   - component: {fileID: 1374674992}
   - component: {fileID: 1374674991}
   - component: {fileID: 1374674993}
@@ -7343,8 +7344,7 @@ MonoBehaviour:
   health: {fileID: 1374674989}
   playerMovement: {fileID: 1374674995}
   visuals: {fileID: 1374674996}
-  switchCooldown: 1
-  switchLag: 0.3
+  switcher: {fileID: 1374674997}
   lightMoveSpeed: 5
   darkMoveSpeed: 7
 --- !u!114 &1374674988
@@ -7515,6 +7515,23 @@ MonoBehaviour:
   lightFlashPrefab: {fileID: 4097512810353927468, guid: ba79b6af6bc4eaa4c89a73464ca6dcf1, type: 3}
   darkFlashPrefab: {fileID: 7079655572318042560, guid: b892861e8f0c0974ca8c4cb5c5efb92b, type: 3}
   animator: {fileID: 1374674991}
+--- !u!114 &1374674997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374674982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fb7cec4eab0354b95b9c64668b2f2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 1374674987}
+  movement: {fileID: 1374674995}
+  visuals: {fileID: 1374674996}
+  switchCooldown: 1
+  switchLag: 0.3
 --- !u!1 &1425623944
 GameObject:
   m_ObjectHideFlags: 0
