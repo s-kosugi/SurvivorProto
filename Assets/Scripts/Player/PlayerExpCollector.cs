@@ -4,6 +4,7 @@ public class PlayerExpCollector : MonoBehaviour
 {
     [SerializeField] private PlayerCore core;
     [SerializeField] private PlayerController controller;
+    public event System.Action OnExpChanged;
 
     [Header("Current EXP")]
     public int lightExp = 0;
@@ -37,9 +38,10 @@ public class PlayerExpCollector : MonoBehaviour
             Debug.Log($"[EXP] Dark +{amount} → {darkExp}");
             TryLevelUpDark();
         }
+        OnExpChanged?.Invoke();  // UIへ通知
     }
 
-    private int GetRequiredExp(int level)
+    public int GetRequiredExp(int level)
     {
         return level * baseExp;
     }

@@ -16,11 +16,11 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private bool isInvincible = false;
     private float invincibleTimer = 0f;
 
-    // ★ HP変更イベント
+    // HP変更イベント
     public delegate void OnHealthChanged(int current, int max);
     public event OnHealthChanged HealthChanged;
 
-    // ★ 死亡イベント
+    // 死亡イベント
     public delegate void OnDeath();
     public event OnDeath DeathEvent;
 
@@ -32,7 +32,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     void Update()
     {
-        // ★ 無敵中の点滅処理
+        // 無敵中の点滅処理
         if (isInvincible)
         {
             invincibleTimer -= Time.deltaTime;
@@ -55,13 +55,13 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     // ======================================================
     public void TakeDamage(int damage, AttackType attackType, Vector3 attackerPos)
     {
-        // ★ 無敵中はダメージ無効
+        // 無敵中はダメージ無効
         if (isInvincible) return;
 
         currentHP -= damage;
         HealthChanged?.Invoke(currentHP, maxHP);
 
-        // ★ 無敵スタート
+        // 無敵スタート
         isInvincible = true;
         invincibleTimer = invincibleTime;
 
@@ -87,10 +87,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     // ======================================================
     void Die()
     {
-        // ★ 先にイベント通知
+        // 先にイベント通知
         DeathEvent?.Invoke();
 
-        // ★ ゲーム側終了処理（必要なら残す）
+        // ゲーム側終了処理（必要なら残す）
         GameManager.Instance?.EndGame();
     }
 
