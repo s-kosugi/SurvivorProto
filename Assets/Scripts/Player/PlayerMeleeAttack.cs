@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class PlayerMeleeAttack : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerCore core;
 
     [Header("Attack Settings")]
     public float attackCooldown = 0.5f;
@@ -22,8 +22,17 @@ public class PlayerMeleeAttack : MonoBehaviour
     private bool bufferedInput = false;
 
     [Header("Combo Settings")]
-    [SerializeField] private int maxComboCount = 3;  // ★ 現状解放最大段数 (1〜3)
+    [SerializeField] private int baseComboCount = 2; // 初期段数（Lv1の段階）
+    [SerializeField] private int maxComboLimit = 5;  // 最大段数（成長上限）
     [SerializeField] private float comboInputWindow = 0.20f;
+    private int MaxCombo
+    {
+        get
+        {
+            int combo = baseComboCount + core.attackStats.DarkComboLevel;
+            return Mathf.Min(combo, maxComboLimit);
+        }
+    }
 
     private int currentComboStep = 0;
     private float comboTimer = 0f;
@@ -114,50 +123,18 @@ public class PlayerMeleeAttack : MonoBehaviour
         playerController.EndMeleeAttack();
 
         // 次段が存在するなら入力待ち
-        if (currentComboStep < maxComboCount && bufferedInput)
+        if (currentComboStep < MaxCombo && bufferedInput)
         {
             bufferedInput = false;
             currentComboStep++;
             StartCoroutine(DoAttack());
         }
-        else if (currentComboStep >= maxComboCount)
+        else if (currentComboStep >= MaxCombo)
         {
             // 3段目後はフィニッシュ
             ResetCombo();
         }
     }
-    private float GetStepForward()
-    {
-        switch (currentComboStep)
-        {
-            case 1: return stepForwardDistance;
-            case 2: return stepForwardDistance * 1.3f;
-            case 3: return stepForwardDistance * 1.6f;
-            default: return stepForwardDistance;
-        }
-    }
-    private float GetMoveLockDuration()
-    {
-        switch (currentComboStep)
-        {
-            case 1: return moveLockDuration * 1.0f; // 基本
-            case 2: return moveLockDuration * 1.5f; // やや重く
-            case 3: return moveLockDuration * 1.9f; // 最も重い
-            default: return moveLockDuration;
-        }
-    }
-    private float GetEffectScale(int step)
-    {
-        switch (step)
-        {
-            case 1: return 1.0f;
-            case 2: return 1.25f;
-            case 3: return 1.5f;
-            default: return 1.0f;
-        }
-    }
-
-
     private void ExecuteAttack()
     {
         float offset = playerController.IsFacingLeft ? offsetLeftX : offsetRightX;
@@ -233,12 +210,46 @@ public class PlayerMeleeAttack : MonoBehaviour
     }
     private float GetAttackRadius(int step)
     {
+        step = Mathf.Min(step, 3); // 4段目以降は3段目扱い
         switch (step)
         {
             case 1: return attackRange;
             case 2: return attackRange * 1.15f;
             case 3: return attackRange * 1.35f;
             default: return attackRange;
+        }
+    }
+    private float GetStepForward()
+    {
+        int step = Mathf.Min(currentComboStep, 3); // 3段目以降は3段目と同じ
+        switch (step)
+        {
+            case 1: return stepForwardDistance;
+            case 2: return stepForwardDistance * 1.3f;
+            case 3: return stepForwardDistance * 1.6f;
+            default: return stepForwardDistance;
+        }
+    }
+    private float GetMoveLockDuration()
+    {
+        int step = Mathf.Min(currentComboStep, 3);
+        switch (step)
+        {
+            case 1: return moveLockDuration * 1.0f;
+            case 2: return moveLockDuration * 1.5f;
+            case 3: return moveLockDuration * 1.9f;
+            default: return moveLockDuration;
+        }
+    }
+    private float GetEffectScale(int step)
+    {
+        step = Mathf.Min(currentComboStep, 3);
+        switch (step)
+        {
+            case 1: return 1.0f;
+            case 2: return 1.25f;
+            case 3: return 1.5f;
+            default: return 1.0f;
         }
     }
     private void ResetCombo()

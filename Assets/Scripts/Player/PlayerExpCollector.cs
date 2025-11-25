@@ -2,63 +2,97 @@ using UnityEngine;
 
 public class PlayerExpCollector : MonoBehaviour
 {
+    [SerializeField] private PlayerCore core;
+    [SerializeField] private PlayerController controller;
+
     [Header("Current EXP")]
     public int lightExp = 0;
     public int darkExp = 0;
 
     [Header("Current Form")]
     public bool isLightForm = true;  
-    // TODO: 後で PlayerFormManager と連動に変更する
 
-    [Header("Level Settings")]
+    [Header("Current Level")]
     public int lightLevel = 1;
     public int darkLevel = 1;
 
-    // 次レベルまで必要なExp（仮）
-    public int expPerLevel = 10;
+    [Header("Level Settings")]
+    public int baseExp = 10;
+
+    private void Awake()
+    {
+    }
 
     public void AddExp(int amount)
     {
-        if (isLightForm)
+        if (controller.ModeState == PlayerModeState.Light)
         {
             lightExp += amount;
             Debug.Log($"[EXP] Light +{amount} → {lightExp}");
-
             TryLevelUpLight();
         }
         else
         {
             darkExp += amount;
             Debug.Log($"[EXP] Dark +{amount} → {darkExp}");
-
             TryLevelUpDark();
         }
     }
 
+    private int GetRequiredExp(int level)
+    {
+        return level * baseExp;
+    }
 
+    // -----------------------
+    //   Light Level Up
+    // -----------------------
     private void TryLevelUpLight()
     {
-        while (lightExp >= expPerLevel)
+        int req = GetRequiredExp(lightLevel);
+
+        while (lightExp >= req)
         {
-            lightExp -= expPerLevel;
+            lightExp -= req;
             lightLevel++;
 
             Debug.Log($"[LEVEL UP] Light → {lightLevel}");
+            OnLightLevelUp();
 
-            // TODO: 光攻撃強化処理をここに
+            req = GetRequiredExp(lightLevel);
         }
     }
 
     private void TryLevelUpDark()
     {
-        while (darkExp >= expPerLevel)
+        int req = GetRequiredExp(darkLevel);
+
+        while (darkExp >= req)
         {
-            darkExp -= expPerLevel;
+            darkExp -= req;
             darkLevel++;
 
             Debug.Log($"[LEVEL UP] Dark → {darkLevel}");
+            OnDarkLevelUp();
 
-            // TODO: 闇攻撃強化処理をここに
+            req = GetRequiredExp(darkLevel);
         }
+    }
+
+    // -----------------------
+    //   Buff Logic
+    // -----------------------
+    private void OnLightLevelUp()
+    {
+        core.attackStats.LightPower += 1;
+        core.attackStats.LightShotLevel++;
+        Debug.Log($"[BUFF] 光攻撃強化 → LightPower = {core.attackStats.LightPower}");
+    }
+
+    private void OnDarkLevelUp()
+    {
+        core.attackStats.DarkPower += 1;
+        core.attackStats.DarkComboLevel++;
+        Debug.Log($"[BUFF] 闇攻撃強化 → DarkPower = {core.attackStats.DarkPower}");
     }
 }

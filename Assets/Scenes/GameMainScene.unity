@@ -6695,6 +6695,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 3712233948235027245, guid: 9b2cd8d3c4382594885c67da57b4e3a1, type: 3}
   firePoint: {fileID: 1374674984}
+  playerController: {fileID: 1374674987}
+  core: {fileID: 1374674994}
   shootCooldown: 0.3
   spreadAngle: 45
   spreadCount: 8
@@ -6725,8 +6727,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0182a31385cdf7b44bca9cfe4bea9896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 1374674983}
   playerController: {fileID: 1374674987}
+  core: {fileID: 1374674994}
   attackCooldown: 0.5
   attackRange: 1.8
   attackAngle: 120
@@ -6735,7 +6737,6 @@ MonoBehaviour:
   attackRecoveryDuration: 0.12
   moveLockDuration: 0.25
   stepForwardDistance: 0.25
-  maxComboCount: 3
   comboInputWindow: 0.6
   attackOrigin: {fileID: 241084084}
   attackEffectPrefab: {fileID: 6242566773016071314, guid: 6f8a6d27a905ce247b8da1b4737ab48a, type: 3}
@@ -6792,12 +6793,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b13aefef3f0184cbdc3b986f7e88fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  core: {fileID: 1374674994}
+  controller: {fileID: 1374674987}
   lightExp: 0
   darkExp: 0
   isLightForm: 1
   lightLevel: 1
   darkLevel: 1
-  expPerLevel: 10
+  baseExp: 3
 --- !u!114 &1374674994
 MonoBehaviour:
   m_ObjectHideFlags: 0
