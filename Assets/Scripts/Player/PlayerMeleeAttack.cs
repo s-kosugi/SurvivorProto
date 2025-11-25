@@ -5,6 +5,7 @@ public class PlayerMeleeAttack : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerCore core;
+    [SerializeField] private PlayerMovement playerMovement;
 
     [Header("Attack Settings")]
     public float attackCooldown = 0.5f;
@@ -111,7 +112,7 @@ public class PlayerMeleeAttack : MonoBehaviour
 
         playerController.BeginMeleeAttack();
 
-        Vector2 stepDir = playerController.IsFacingLeft ? Vector2.left : Vector2.right;
+        Vector2 stepDir = playerMovement.IsFacingLeft ? Vector2.left : Vector2.right;
         transform.position += (Vector3)(stepDir * GetStepForward());
 
         ExecuteAttack();
@@ -141,10 +142,10 @@ public class PlayerMeleeAttack : MonoBehaviour
     }
     private void ExecuteAttack()
     {
-        float offset = playerController.IsFacingLeft ? offsetLeftX : offsetRightX;
+        float offset = playerMovement.IsFacingLeft ? offsetLeftX : offsetRightX;
 
         Vector2 attackPos = (Vector2)attackOrigin.position +
-            new Vector2(playerController.IsFacingLeft ? -offset : offset, 0f);
+            new Vector2(playerMovement.IsFacingLeft ? -offset : offset, 0f);
 
         // エフェクト生成
         if (attackEffectPrefab != null)
@@ -157,7 +158,7 @@ public class PlayerMeleeAttack : MonoBehaviour
             fx.transform.localScale *= scaleRate;
 
             // 左向きならエフェクトを反転
-            if (playerController.IsFacingLeft)
+            if (playerMovement.IsFacingLeft)
             {
                 var scale = fx.transform.localScale;
                 scale.x *= -1;
@@ -266,7 +267,7 @@ public class PlayerMeleeAttack : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         if (attackOrigin == null) return;
-        bool isLeft = (playerController != null) && playerController.IsFacingLeft;
+        bool isLeft = (playerMovement != null) && playerMovement.IsFacingLeft;
         Vector2 attackDirection = isLeft ? Vector2.left : Vector2.right;
 
         Vector2 attackPos = (Vector2)attackOrigin.position + (attackDirection * attackRange * 0.5f);
