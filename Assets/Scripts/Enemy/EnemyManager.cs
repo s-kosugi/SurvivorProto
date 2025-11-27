@@ -7,9 +7,6 @@ public class EnemyManager : MonoBehaviour
     private readonly List<GameObject> activeEnemies = new();
     public int TotalEnemyCount => activeEnemies.Count;
 
-    [Header("Enemy Prefabs (Default)")]
-    [SerializeField] private GameObject defaultEnemyPrefab;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)

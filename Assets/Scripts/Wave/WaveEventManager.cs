@@ -4,10 +4,6 @@ public class WaveEventManager : MonoBehaviour
 {
     public static WaveEventManager Instance { get; private set; }
 
-    // ===== MiniBoss =====
-    [Header("MiniBoss Settings")]
-    [SerializeField] private MiniBossController[] miniBossPrefabs;
-
     // ===== Rewards =====
     [Header("Rewards")]
     [SerializeField] private int hpRecoveryAmount = 100;
