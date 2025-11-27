@@ -1,28 +1,24 @@
 using UnityEngine;
 
+[RequireComponent(typeof(EnemyBase))]
 public class EnemyDarkWeak : MonoBehaviour
 {
     [Header("----- References -----")]
-    [SerializeField] private Transform player;
-    [SerializeField] private EnemyBase health;
-    [SerializeField] private SpriteRenderer sr;
-
-    [Header("----- Movement -----")]
-    [SerializeField] private float moveSpeed = 1.2f;
+    [SerializeField] private EnemyBase enemyBase;
 
     [Header("----- Shooting (Ranged Attack) -----")]
     [SerializeField] private GameObject bulletPrefab;       // 敵の通常弾
     [SerializeField] private float shootInterval = 1.5f;    // 通常射撃間隔
     [SerializeField] private float stopShootRange = 1.2f;   // この距離未満で射撃停止
-    [SerializeField] private int shootDamage = 1;
     [SerializeField] private float bulletSpeed = 8f;
 
-    float shootTimer = 0f;
+    private int shootDamage = 1;
+    private float shootTimer = 0f;
 
     [Header("----- Counter Attack -----")]
     [SerializeField] private GameObject counterBulletPrefab; // カウンター弾
-    [SerializeField] private int counterDamage = 1;
     [SerializeField] private float counterSpeed = 10f;
+    private int counterDamage = 1;
 
     [Header("----- Weakness Settings -----")]
     public float darkMeleeMultiplier = 1.8f;   // 闇近接 → 露骨に弱点
@@ -31,10 +27,15 @@ public class EnemyDarkWeak : MonoBehaviour
     [Header("----- Knockback -----")]
     [SerializeField] private float knockbackPower = 0.2f;
 
+    private Transform player;
+
+    void Awake()
+    {
+        enemyBase.OnBalanceApplied += ApplyBalance;
+    }
     private void Start()
     {
-        if (!player)
-            player = GameObject.FindWithTag("Player")?.transform;
+        player = PlayerManager.Instance.MainPlayer.transform;
     }
 
     private void Update()
@@ -53,20 +54,6 @@ public class EnemyDarkWeak : MonoBehaviour
                 shootTimer = 0f;
             }
         }
-
-        // --- 追跡（近距離戦を促す） ---
-        MoveTowardsPlayer();
-    }
-
-    // ======================================================
-    //  移動
-    // ======================================================
-    private void MoveTowardsPlayer()
-    {
-        if (!player) return;
-
-        Vector2 dir = (player.position - transform.position).normalized;
-        transform.position += (Vector3)(dir * moveSpeed * Time.deltaTime);
     }
 
     // ======================================================
@@ -119,11 +106,21 @@ public class EnemyDarkWeak : MonoBehaviour
             final *= lightBulletMultiplier;
         }
 
-        health.TakeDamage(Mathf.RoundToInt(final), type, transform.position);
+        enemyBase.TakeDamage(Mathf.RoundToInt(final), type, transform.position);
     }
 
     private void Knockback(Vector2 dir)
     {
         transform.position += (Vector3)(dir * knockbackPower);
+    }
+
+    /// <summary>
+    /// バランス適用
+    /// </summary>
+    /// <param name="stat"></param>
+    private void ApplyBalance(EnemyStat stat)
+    {
+        shootDamage = stat.attack;
+        counterDamage = stat.attack;
     }
 }

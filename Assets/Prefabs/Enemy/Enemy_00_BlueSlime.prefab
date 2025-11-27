@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 2387568073689418926}
   - component: {fileID: 7894543285556624195}
   m_Layer: 7
-  m_Name: Enemy_00
+  m_Name: Enemy_00_BlueSlime
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6131d7c2c784f8641891e848d8c5eb9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyId: 0
   maxHP: 3
   score: 10
   dropper: {fileID: 2387568073689418926}
@@ -149,6 +150,7 @@ MonoBehaviour:
   moveSpeed: 1
   spriteRenderer: {fileID: 4626955109083976971}
   rb: {fileID: 8874574201643205106}
+  enemyBase: {fileID: 119735645774664799}
 --- !u!58 &-3811422713648854492
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -196,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5925b140a832949934c862fa8aa0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyBase: {fileID: 119735645774664799}
   contactDamage: 1
 --- !u!114 &2387568073689418926
 MonoBehaviour:

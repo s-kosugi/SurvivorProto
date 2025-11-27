@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(EnemyBase))]
 public class EnemyPhysicalFollow : MonoBehaviour
 {
     [Header("----- Follow Settings -----")]
@@ -8,10 +9,16 @@ public class EnemyPhysicalFollow : MonoBehaviour
     [SerializeField] private float stopDistance = 1.5f;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] EnemyBase enemyBase;
 
     private Transform player;
 
     public bool EnableFollow { get; set; } = true;
+
+    void Awake()
+    {
+        enemyBase.OnBalanceApplied += ApplyBalance;
+    }
 
     void Start()
     {
@@ -45,6 +52,14 @@ public class EnemyPhysicalFollow : MonoBehaviour
         }
 
         rb.velocity = dir * moveSpeed;
+    }
+    /// <summary>
+    /// バランス適用
+    /// </summary>
+    /// <param name="stat"></param>
+    private void ApplyBalance(EnemyStat stat)
+    {
+        moveSpeed = stat.moveSpeed;
     }
 
 }

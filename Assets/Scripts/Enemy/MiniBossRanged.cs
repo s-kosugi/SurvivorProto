@@ -1,7 +1,10 @@
 using UnityEngine;
 
+[RequireComponent(typeof(EnemyBase))]
 public class MiniBossRanged : MonoBehaviour
 {
+    [Header("Reference")]
+    [SerializeField] private EnemyBase enemyBase;
     [Header("----- Bullet Prefab -----")]
     [SerializeField] private Bullet bulletPrefab;
 
@@ -10,18 +13,23 @@ public class MiniBossRanged : MonoBehaviour
     [SerializeField] private float danmakuInterval = 1f;
     [SerializeField] private float danmakuBulletSpeed = 4f;
     [SerializeField] private float danmakuRotationSpeed = 15f;
+    private int snipeBulletDamageRate = 2;
 
     [Header("----- Aim Shot Settings -----")]
     [SerializeField] private float aimInterval = 3f;
     [SerializeField] private float aimBulletSpeed = 10f;
+    private int bulletDamage = 1;
 
     private float danmakuTimer = 0f;
     private float aimTimer = 0f;
-
     private float rotationOffset = 0f;
 
     private Transform player;
 
+    void Awake()
+    {
+        enemyBase.OnBalanceApplied += ApplyBalance;
+    }
     void Start()
     {
         player = PlayerManager.Instance.MainPlayer.transform;
@@ -68,7 +76,7 @@ public class MiniBossRanged : MonoBehaviour
             );
 
             var b = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            b.Init(dir, BulletOwner.Enemy, 1, danmakuBulletSpeed);
+            b.Init(dir, BulletOwner.Enemy, bulletDamage, danmakuBulletSpeed);
         }
     }
 
@@ -80,6 +88,15 @@ public class MiniBossRanged : MonoBehaviour
         Vector2 dir = (player.position - transform.position).normalized;
 
         var b = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-        b.Init(dir, BulletOwner.Enemy, 2, aimBulletSpeed);
+        b.Init(dir, BulletOwner.Enemy, snipeBulletDamageRate * bulletDamage, aimBulletSpeed);
+    }
+
+    /// <summary>
+    /// バランス適用
+    /// </summary>
+    /// <param name="stat"></param>
+    private void ApplyBalance(EnemyStat stat)
+    {
+        bulletDamage = stat.attack;
     }
 }

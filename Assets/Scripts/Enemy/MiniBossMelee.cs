@@ -1,6 +1,8 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(EnemyPhysicalFollow))]
+[RequireComponent(typeof(EnemyBase))]
 public class MiniBossMelee : MonoBehaviour
 {
     [Header("----- References -----")]
@@ -15,9 +17,10 @@ public class MiniBossMelee : MonoBehaviour
 
     [Header("----- Dash Settings -----")]
     [SerializeField] private float chargeTime = 0.6f;     // 溜め時間
-    [SerializeField] private float dashSpeed = 14f;       // 突進速度
+    [SerializeField] private float dashSpeedRate = 7f;       // 突進速度
     [SerializeField] private float dashDuration = 0.5f;   // 突進時間
     [SerializeField] private float recoverTime = 0.8f;    // 回復（硬直）時間
+    [SerializeField] EnemyBase enemyBase;                 // 基礎移動速度取得
 
     [Header("----- PowerUp (Counter Reaction) -----")]
     [SerializeField] private float chargeTimeMultiplier = 0.85f;    // 溜め短縮率
@@ -25,6 +28,7 @@ public class MiniBossMelee : MonoBehaviour
 
 
     private float stateTimer = 0f;
+    private float baseMoveSpeed = 1.5f;
 
     private enum BossState
     {
@@ -38,8 +42,7 @@ public class MiniBossMelee : MonoBehaviour
 
     void Awake()
     {
-        if (rb == null) rb = GetComponent<Rigidbody2D>();
-        if (followAI == null) followAI = GetComponent<EnemyPhysicalFollow>();
+        enemyBase.OnBalanceApplied += ApplyBalance;
     }
 
     void Start()
@@ -129,7 +132,7 @@ public class MiniBossMelee : MonoBehaviour
         Vector2 dir = (player.position - transform.position).normalized;
 
         // 物理突進
-        rb.velocity = dir * dashSpeed;
+        rb.velocity = dir * dashSpeedRate * baseMoveSpeed;
     }
 
     // ----------------------------------------------------------
@@ -171,6 +174,14 @@ public class MiniBossMelee : MonoBehaviour
         Debug.Log($"[MiniBossMelee] Counter! 次回: Charge={chargeTime:F2}, Recover={recoverTime:F2}");
 
         ChangeState(BossState.Recover);
+    }
+    /// <summary>
+    /// バランス適用
+    /// </summary>
+    /// <param name="stat"></param>
+    private void ApplyBalance(EnemyStat stat)
+    {
+        baseMoveSpeed = stat.moveSpeed;
     }
 
 }

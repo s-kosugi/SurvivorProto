@@ -1,18 +1,24 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(EnemyBase))]
 public class EnemyFollow : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] Rigidbody2D rb;
+    [SerializeField] EnemyBase enemyBase;
     private Transform player;
+    float moveSpeed = 2f;
 
+    void Awake()
+    {
+        enemyBase.OnBalanceApplied += ApplyBalance;
+    }
     void Start()
     {
-        // PlayerPlayerObjectを取得
+        // PlayerObjectを取得
         GameObject playerObj = PlayerManager.Instance.MainPlayer.gameObject;
-        
+
         if (playerObj != null)
             player = playerObj.transform;
     }
@@ -38,6 +44,14 @@ public class EnemyFollow : MonoBehaviour
         // スムーズ移動
         Vector2 newPos = rb.position + direction * moveSpeed * Time.fixedDeltaTime;
         rb.MovePosition(newPos);
+    }
+    /// <summary>
+    /// バランス適用
+    /// </summary>
+    /// <param name="stat"></param>
+    private void ApplyBalance(EnemyStat stat)
+    {
+        moveSpeed = stat.moveSpeed;
     }
 
 }

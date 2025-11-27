@@ -1,23 +1,30 @@
 using UnityEngine;
 
+[RequireComponent(typeof(EnemyBase))]
 public class EnemyExplosionAttack : MonoBehaviour
 {
     [Header("Explosion Settings")]
-    public float explosionRange = 2.5f;
-    public int explosionDamage = 2;
-    public float chargeTime = 0.8f;
-    public float flashInterval = 0.1f;
+    [SerializeField] private float explosionRange = 2.5f;
+    [SerializeField] private int explosionDamageRate = 2;
+    [SerializeField] private float chargeTime = 0.8f;
+    [SerializeField] private float flashInterval = 0.1f;
 
     [Header("References")]
-    [SerializeField] private Transform player;
     [SerializeField] private SpriteRenderer enemyRenderer;
     [SerializeField] private GameObject explosionIndicator; // 子の円スプライト
+    [SerializeField] private EnemyBase enemyBase;
 
-    bool charging = false;
-    float chargeTimer = 0f;
-    float flashTimer = 0f;
-    bool flashToggle = false;
+    private bool charging = false;
+    private float chargeTimer = 0f;
+    private float flashTimer = 0f;
+    private bool flashToggle = false;
+    private int baseDamage = 1;
+    private Transform player;
 
+    void Awake()
+    {
+        enemyBase.OnBalanceApplied += ApplyBalance;
+    }
     private void Start()
     {
         // プレイヤー取得
@@ -75,7 +82,7 @@ public class EnemyExplosionAttack : MonoBehaviour
             if (currentDist < explosionRange)
             {
                 PlayerManager.Instance.MainPlayer.health?.TakeDamage(
-                    explosionDamage,
+                    explosionDamageRate * baseDamage,
                     AttackType.Explosion,
                     transform.position
                 );
@@ -94,5 +101,13 @@ public class EnemyExplosionAttack : MonoBehaviour
 
         enemyRenderer.color = Color.white;
         if (explosionIndicator) explosionIndicator.SetActive(false);
+    }
+    /// <summary>
+    /// バランス適用
+    /// </summary>
+    /// <param name="stat"></param>
+    private void ApplyBalance(EnemyStat stat)
+    {
+        baseDamage = stat.attack;
     }
 }
