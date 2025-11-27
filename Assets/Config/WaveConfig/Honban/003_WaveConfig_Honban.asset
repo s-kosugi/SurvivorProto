@@ -10,9 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a47db7d856a514d4aa67e7bc360d69ae, type: 3}
-  m_Name: 001_WaveConfig_Honban
+  m_Name: 003_WaveConfig_Honban
   m_EditorClassIdentifier: 
   enemies:
   - enemyId: 0
-    count: 6
-    interval: 0.6
+    count: 8
+    interval: 0.28
+  - enemyId: 1
+    count: 4
+    interval: 0.35
+  - enemyId: 3
+    count: 1
+    interval: 0.45

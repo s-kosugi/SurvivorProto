@@ -21,8 +21,8 @@ public class EnemyDarkWeak : MonoBehaviour
     private int counterDamage = 1;
 
     [Header("----- Weakness Settings -----")]
-    public float darkMeleeMultiplier = 1.8f;   // 闇近接 → 露骨に弱点
-    public float lightBulletMultiplier = 0.7f; // 光の遠距離は硬い（弱点ではない）
+    [SerializeField] private float darkMeleeMultiplier = 2.0f;   // 闇近接 → 露骨に弱点
+    [SerializeField] private float lightBulletMultiplier = 1.0f; // 光の遠距離は硬い（弱点ではない）
 
     [Header("----- Knockback -----")]
     [SerializeField] private float knockbackPower = 0.2f;

@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7d068f49e7d26541942636718e1dad4, type: 3}
-  m_Name: WaveTimingSet_Honban
+  m_Script: {fileID: 11500000, guid: 89a345d106af8ca43a465e7206fa3347, type: 3}
+  m_Name: MiniBossConfigSet_Honban
   m_EditorClassIdentifier: 
-  waveDuration: 20
-  miniBossTime: 60
+  miniBosses:
+  - {fileID: 11400000, guid: 1a74bb856c236154380375081cf7fb50, type: 2}
+  - {fileID: 11400000, guid: 677a9d93804793c459e013ed60e59130, type: 2}

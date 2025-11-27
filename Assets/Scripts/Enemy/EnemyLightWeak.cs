@@ -3,10 +3,10 @@ public class EnemyLightWeak : MonoBehaviour
 {
     [SerializeField] EnemyBase health;
 
-    public float lightRangedMultiplier = 1.8f;
-    public float darkMeleeMultiplier = 1f;
-    public float meleeHardness = 0.8f;
-    public float knockbackPower = 0.2f;
+    [SerializeField] private float lightRangedMultiplier = 3.0f;
+    [SerializeField] private float darkMeleeMultiplier = 1f;
+    [SerializeField] private float meleeHardness = 0.8f;
+    [SerializeField] private float knockbackPower = 0.2f;
 
     public void ApplyWeaknessDamage(int dmg, PlayerModeState form, AttackType type, Vector2 hitDir)
     {
