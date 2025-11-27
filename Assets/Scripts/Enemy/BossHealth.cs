@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class MiniBossHealth : EnemyHealth
+public class BossHealth : EnemyBase
 {
-    public event System.Action<MiniBossHealth> OnBossDead;
+    public event System.Action<BossHealth> OnBossDead;
     public bool IsDead { get; private set; } = false;
 
     protected override void Start()

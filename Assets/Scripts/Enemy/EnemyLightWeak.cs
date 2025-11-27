@@ -1,7 +1,7 @@
 using UnityEngine;
 public class EnemyLightWeak : MonoBehaviour
 {
-    [SerializeField] EnemyHealth health;
+    [SerializeField] EnemyBase health;
 
     public float lightRangedMultiplier = 1.8f;
     public float darkMeleeMultiplier = 1f;

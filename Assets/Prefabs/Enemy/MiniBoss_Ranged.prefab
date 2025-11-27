@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3515707553177145472}
   - component: {fileID: 7466391000274364352}
   - component: {fileID: 1118707561807154145}
+  - component: {fileID: 1691347190153093617}
   m_Layer: 7
   m_Name: MiniBoss_Ranged
   m_TagString: Enemy
@@ -103,6 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee30d75ede97494b97923e7b76294e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bossHealth: {fileID: 3029814948797036346}
 --- !u!114 &3029814948797036346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,7 +120,7 @@ MonoBehaviour:
   maxHP: 30
   score: 100
   dropper: {fileID: 0}
-  enemyRenderer: {fileID: 3432476060679249362}
+  enemyHitEffect: {fileID: 1691347190153093617}
 --- !u!114 &260130389664186517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,3 +240,16 @@ MonoBehaviour:
   danmakuRotationSpeed: 10
   aimInterval: 5
   aimBulletSpeed: 5
+--- !u!114 &1691347190153093617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8963608318197175978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ad16aab12b7754ba26f06fb6b8f2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyRenderer: {fileID: 3432476060679249362}

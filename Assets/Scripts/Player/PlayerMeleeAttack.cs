@@ -201,7 +201,7 @@ public class PlayerMeleeAttack : MonoBehaviour
             }
 
             // 通常敵
-            if (hit.TryGetComponent(out EnemyHealth enemy))
+            if (hit.TryGetComponent(out EnemyBase enemy))
             {
                 enemy.TakeDamage(attackDamage, AttackType.Melee, this.transform.position);
 

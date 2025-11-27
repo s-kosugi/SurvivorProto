@@ -4,7 +4,7 @@ public class EnemyDarkWeak : MonoBehaviour
 {
     [Header("----- References -----")]
     [SerializeField] private Transform player;
-    [SerializeField] private EnemyHealth health;
+    [SerializeField] private EnemyBase health;
     [SerializeField] private SpriteRenderer sr;
 
     [Header("----- Movement -----")]

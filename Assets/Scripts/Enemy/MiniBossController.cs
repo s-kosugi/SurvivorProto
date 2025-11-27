@@ -1,13 +1,15 @@
 using UnityEngine;
 
-public class MiniBossBase : MonoBehaviour
+[RequireComponent(typeof(BossHealth))]
+public class MiniBossController : MonoBehaviour
 {
-    public MiniBossHealth Health { get; private set; }
+    [SerializeField] BossHealth bossHealth;
+    public BossHealth Health { get; private set; }
 
     protected virtual void Awake()
     {
         // HP管理を取得
-        Health = GetComponent<MiniBossHealth>();
+        Health = bossHealth;
 
         if (Health == null)
         {

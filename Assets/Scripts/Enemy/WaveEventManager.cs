@@ -6,14 +6,14 @@ public class WaveEventManager : MonoBehaviour
 
     // ===== MiniBoss =====
     [Header("MiniBoss Settings")]
-    [SerializeField] private MiniBossBase[] miniBossPrefabs;
+    [SerializeField] private MiniBossController[] miniBossPrefabs;
 
     // ===== Rewards =====
     [Header("Rewards")]
     [SerializeField] private int hpRecoveryAmount = 100;
 
     // ===== Internal =====
-    private MiniBossBase activeBoss;
+    private MiniBossController activeBoss;
     private PlayerCore player;
 
     // ===== Callbacks =====
@@ -56,9 +56,9 @@ public class WaveEventManager : MonoBehaviour
 
             Vector3 spawnPos = player.transform.position + (Vector3)offset;
 
-            MiniBossBase prefab = config.miniBossPrefabs[Random.Range(0, config.miniBossPrefabs.Length)];
+            MiniBossController prefab = config.miniBossPrefabs[Random.Range(0, config.miniBossPrefabs.Length)];
 
-            MiniBossBase boss = Instantiate(prefab, spawnPos, Quaternion.identity);
+            MiniBossController boss = Instantiate(prefab, spawnPos, Quaternion.identity);
             activeBoss = boss;
 
             boss.Health.OnBossDead += OnMiniBossDead;
@@ -70,7 +70,7 @@ public class WaveEventManager : MonoBehaviour
     // ============================================================
     //  MiniBoss Dead
     // ============================================================
-    private void OnMiniBossDead(MiniBossHealth health)
+    private void OnMiniBossDead(BossHealth health)
     {
         if (activeBoss != null && activeBoss.Health == health)
         {

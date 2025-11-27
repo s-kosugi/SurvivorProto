@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -1990998898361678069}
   - component: {fileID: 8921208771264086609}
   - component: {fileID: -3231790365263773972}
+  - component: {fileID: 6956264037020904753}
   m_Layer: 7
   m_Name: Enemy02_DarkWeak
   m_TagString: Enemy
@@ -167,7 +168,7 @@ MonoBehaviour:
   maxHP: 3
   score: 10
   dropper: {fileID: 0}
-  enemyRenderer: {fileID: 4626955109083976971}
+  enemyHitEffect: {fileID: 6956264037020904753}
 --- !u!114 &-1990998898361678069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,3 +224,16 @@ MonoBehaviour:
   darkMeleeMultiplier: 1.8
   lightBulletMultiplier: 0.7
   knockbackPower: 0.2
+--- !u!114 &6956264037020904753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4481191993047572964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ad16aab12b7754ba26f06fb6b8f2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyRenderer: {fileID: 4626955109083976971}

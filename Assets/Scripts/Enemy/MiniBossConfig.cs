@@ -4,7 +4,7 @@ using UnityEngine;
 public class MiniBossConfig : ScriptableObject
 {
     [Header("MiniBosses to Spawn")]
-    public MiniBossBase[] miniBossPrefabs;
+    public MiniBossController[] miniBossPrefabs;
 
     [Header("Spawn Settings")]
     public float spawnDistanceMin = 5f;
