@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [SerializeField] private EnemyPrefabDatabase database;
+
     [Header("Spawn Settings")]
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private float baseSpawnInterval = 2f; 
@@ -10,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Wave Control")]
     public float spawnRate = 1f;         // 自動湧き時のスケール
-    public bool autoSpawn = true;        // ← 新規：自動スポーンON/OFF
+    public bool autoSpawn = false;        // ← 新規：自動スポーンON/OFF
 
     private float timer;
     private Transform player;
@@ -70,18 +72,16 @@ public class EnemySpawner : MonoBehaviour
     /// <summary>
     /// Wave制御用：手動で敵をスポーンさせる
     /// </summary>
-    public GameObject SpawnEnemy(GameObject prefab = null)
+    public void SpawnEnemy(EnemyID id)
     {
-        if (prefab == null) prefab = enemyPrefab;
+        var prefab = database.GetPrefab(id);
 
-        if (player == null || prefab == null) return null;
-
+        if (prefab == null)
+            return;
         Vector2 randomDir = Random.insideUnitCircle.normalized * spawnRadius;
         Vector2 spawnPos = (Vector2)player.position + randomDir;
-
         GameObject enemy = Instantiate(prefab, spawnPos, Quaternion.identity, transform);
         EnemyManager.Instance.RegisterEnemy(enemy);
-        return enemy;
     }
 
     private void OnDrawGizmosSelected()

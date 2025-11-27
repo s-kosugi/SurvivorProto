@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Wave/WaveConfig", fileName = "WaveConfig")]
+[CreateAssetMenu(menuName = "Game/WaveConfig", fileName = "WaveConfig")]
 public class WaveConfig : ScriptableObject
 {
     [Header("Enemies in this Wave")]

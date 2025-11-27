@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a47db7d856a514d4aa67e7bc360d69ae, type: 3}
-  m_Name: WaveConfig_02
+  m_Name: 002_WaveConfig_Debug
   m_EditorClassIdentifier: 
   enemies:
-  - prefab: {fileID: 4481191993047572964, guid: bd03ba270cbc5344aa45de6e17bf70ed, type: 3}
-    count: 10
-    interval: 0.4
-  - prefab: {fileID: 4481191993047572964, guid: 0a48d54411ba84449b81d03a8457c7f0, type: 3}
-    count: 3
+  - enemyId: 0
+    count: 8
+    interval: 0.6
+  - enemyId: 1
+    count: 2
     interval: 1

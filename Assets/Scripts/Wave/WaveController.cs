@@ -5,24 +5,23 @@ public class WaveController : MonoBehaviour
 {
     public static WaveController Instance { get; private set; }
 
-    [Header("Wave Settings")]
-    public WaveConfig[] waveConfigs;
-    public float waveDuration = 10f;      // Wave切替時間
-    public float miniBossTime = 30f;      // MiniBoss発生時間
+    [Header("Wave Profile (Normal / Debug / BossOnly)")]
+    [SerializeField] private WaveProfile waveProfile;
 
-    [Header("MiniBoss Settings")]
-    public MiniBossConfig[] miniBossConfigs;
-
+    // Profile適用後に使う内部変数（Inspectorには見せない）
+    [HideInInspector] public WaveConfig[] waveConfigs;
+    [HideInInspector] public float waveDuration;
+    [HideInInspector] public float miniBossTime;
+    [HideInInspector] public MiniBossConfig[] miniBossConfigs;
 
     [Header("Spawners")]
-    public EnemySpawner[] spawners;       // 1つだけでOK（相対座標スポーン）
+    public EnemySpawner[] spawners;
 
     private float timer = 0f;
     private int currentWave = 0;
     private bool miniBossCalled = false;
     private int currentMiniBossIndex = 0;
     private float nextMiniBossTime;
-
 
     private Coroutine waveRoutine;
 
@@ -38,8 +37,10 @@ public class WaveController : MonoBehaviour
 
     private void Start()
     {
+        ApplyWaveProfile();                 // WaveProfileの内容を反映
         nextMiniBossTime = miniBossTime;
     }
+
     private void OnEnable()
     {
         if (WaveEventManager.Instance != null)
@@ -52,10 +53,8 @@ public class WaveController : MonoBehaviour
             WaveEventManager.Instance.OnMiniBossCleared -= HandleMiniBossCleared;
     }
 
-
     private void Update()
     {
-        // ゲームがプレイ状態でなければできない
         if (GameManager.Instance == null || GameManager.Instance.State != GameState.Playing)
             return;
 
@@ -86,9 +85,15 @@ public class WaveController : MonoBehaviour
         }
     }
 
-    // ============================================================
-    //  Wave開始
-    // ============================================================
+
+    private void ApplyWaveProfile()
+    {
+        waveConfigs = waveProfile.waveConfigs;
+        waveDuration = waveProfile.timing.waveDuration;
+        miniBossTime = waveProfile.timing.miniBossTime;
+        miniBossConfigs = waveProfile.miniBossConfigSet.miniBosses;
+    }
+
     private void StartWave(int waveIndex)
     {
         if (waveRoutine == null && waveIndex < waveConfigs.Length)
@@ -103,7 +108,7 @@ public class WaveController : MonoBehaviour
         {
             for (int i = 0; i < enemySet.count; i++)
             {
-                spawners[0].SpawnEnemy(enemySet.prefab);
+                spawners[0].SpawnEnemy(enemySet.enemyId);
                 yield return new WaitForSeconds(enemySet.interval);
             }
         }
@@ -163,7 +168,8 @@ public class WaveController : MonoBehaviour
     // ============================================================
     public void ResetWave()
     {
-        // Reset timer & wave index
+        ApplyWaveProfile(); // リセット時もProfileの値再反映
+
         timer = 0f;
         currentWave = 0;
 
@@ -187,9 +193,5 @@ public class WaveController : MonoBehaviour
         // イベント処理安全対策
         WaveEventManager.Instance.OnMiniBossCleared -= HandleMiniBossCleared;
         WaveEventManager.Instance.OnMiniBossCleared += HandleMiniBossCleared;
-
-
-        Debug.Log("[WaveController] ResetWave (full) done.");
     }
-
 }

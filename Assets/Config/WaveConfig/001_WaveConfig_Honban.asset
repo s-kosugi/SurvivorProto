@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a47db7d856a514d4aa67e7bc360d69ae, type: 3}
-  m_Name: WaveConfig_01
+  m_Name: 001_WaveConfig_Honban
   m_EditorClassIdentifier: 
   enemies:
-  - prefab: {fileID: 4481191993047572964, guid: bd03ba270cbc5344aa45de6e17bf70ed, type: 3}
+  - enemyId: 0
     count: 6
     interval: 0.6

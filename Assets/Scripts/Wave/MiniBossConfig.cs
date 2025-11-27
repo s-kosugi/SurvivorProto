@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Wave/MiniBossConfig", fileName = "MiniBossConfig")]
+[CreateAssetMenu(menuName = "Game/MiniBossConfig", fileName = "MiniBossConfig")]
 public class MiniBossConfig : ScriptableObject
 {
     [Header("MiniBosses to Spawn")]
