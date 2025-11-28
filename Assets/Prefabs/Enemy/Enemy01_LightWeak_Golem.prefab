@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 2794898589408187480}
   - component: {fileID: 4384098530895018852}
   - component: {fileID: -1927814372011067153}
+  - component: {fileID: -8713845660266212944}
   m_Layer: 7
   m_Name: Enemy01_LightWeak_Golem
   m_TagString: Enemy
@@ -178,9 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyId: 3
-  maxHP: 40
-  score: 15
-  dropper: {fileID: 0}
+  dropper: {fileID: -8713845660266212944}
   enemyHitEffect: {fileID: -1927814372011067153}
 --- !u!114 &-1990998898361678069
 MonoBehaviour:
@@ -194,7 +193,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 847a60f6efa3da84ebfa26fbe6ccfe32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.7
   spriteRenderer: {fileID: 4626955109083976971}
   rb: {fileID: 8874574201643205106}
   enemyBase: {fileID: 119735645774664799}
@@ -211,7 +209,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBase: {fileID: 119735645774664799}
-  contactDamage: 1
 --- !u!114 &2794898589408187480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,6 +258,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyRenderer: {fileID: 4626955109083976971}
+--- !u!114 &-8713845660266212944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4481191993047572964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01f732634780974789bde403c667cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropChance: 0.85
+  dropTable: {fileID: 11400000, guid: 01a0c1ab815e6e64fb3eae09d4924a8e, type: 2}
 --- !u!1 &8812052434590365526
 GameObject:
   m_ObjectHideFlags: 0

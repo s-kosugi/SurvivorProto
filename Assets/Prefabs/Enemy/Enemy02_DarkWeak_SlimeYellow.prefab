@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8921208771264086609}
   - component: {fileID: -3231790365263773972}
   - component: {fileID: 6956264037020904753}
+  - component: {fileID: 4077865898776419998}
   m_Layer: 7
   m_Name: Enemy02_DarkWeak_SlimeYellow
   m_TagString: Enemy
@@ -166,9 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyId: 1
-  maxHP: 3
-  score: 10
-  dropper: {fileID: 0}
+  dropper: {fileID: 4077865898776419998}
   enemyHitEffect: {fileID: 6956264037020904753}
 --- !u!114 &-1990998898361678069
 MonoBehaviour:
@@ -182,7 +181,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 847a60f6efa3da84ebfa26fbe6ccfe32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
   spriteRenderer: {fileID: 4626955109083976971}
   rb: {fileID: 8874574201643205106}
   enemyBase: {fileID: 119735645774664799}
@@ -199,7 +197,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBase: {fileID: 119735645774664799}
-  contactDamage: 1
 --- !u!114 &-3231790365263773972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,10 +213,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 3712233948235027245, guid: b3a140a8780fa5e49ad28d0123d94618, type: 3}
   shootInterval: 3
   stopShootRange: 4
-  shootDamage: 1
   bulletSpeed: 5
   counterBulletPrefab: {fileID: 3712233948235027245, guid: b3a140a8780fa5e49ad28d0123d94618, type: 3}
-  counterDamage: 1
   counterSpeed: 4
   darkMeleeMultiplier: 1.8
   lightBulletMultiplier: 0.7
@@ -237,3 +232,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyRenderer: {fileID: 4626955109083976971}
+--- !u!114 &4077865898776419998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4481191993047572964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01f732634780974789bde403c667cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropChance: 0.7
+  dropTable: {fileID: 11400000, guid: f5e96f86129b53b4c8d23fb762c61bd9, type: 2}

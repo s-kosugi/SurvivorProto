@@ -41,9 +41,19 @@ public class PlayerExpCollector : MonoBehaviour
         OnExpChanged?.Invoke();  // UIへ通知
     }
 
+    /// <summary>
+    /// 必要経験値、ゆる指数カーブ
+    /// </summary>
+    /// <param name="level"></param>
+    /// <returns></returns>
     public int GetRequiredExp(int level)
     {
-        return level * baseExp;
+        // 固め指数カーブ（baseExp × 1.5^(level-1)）
+        float curve = Mathf.Pow(1.5f, level - 1);
+        int required = Mathf.RoundToInt(baseExp * curve);
+
+        // 必要EXPが1未満になることを避ける（序盤の安定化）
+        return Mathf.Max(required, baseExp);
     }
 
     // -----------------------

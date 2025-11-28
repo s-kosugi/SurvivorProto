@@ -131,8 +131,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyId: 0
-  maxHP: 3
-  score: 10
   dropper: {fileID: 2387568073689418926}
   enemyHitEffect: {fileID: 7894543285556624195}
 --- !u!114 &-1990998898361678069
@@ -147,7 +145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 847a60f6efa3da84ebfa26fbe6ccfe32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
   spriteRenderer: {fileID: 4626955109083976971}
   rb: {fileID: 8874574201643205106}
   enemyBase: {fileID: 119735645774664799}
@@ -199,7 +196,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBase: {fileID: 119735645774664799}
-  contactDamage: 1
 --- !u!114 &2387568073689418926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,8 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c01f732634780974789bde403c667cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropChance: 1
-  dropTable: {fileID: 11400000, guid: 092b84bdf4babed4db1cec8d82f82ada, type: 2}
+  dropChance: 0.5
+  dropTable: {fileID: 11400000, guid: bf50e58c5ee75ff4e9cd96b9537c33d0, type: 2}
 --- !u!114 &7894543285556624195
 MonoBehaviour:
   m_ObjectHideFlags: 0

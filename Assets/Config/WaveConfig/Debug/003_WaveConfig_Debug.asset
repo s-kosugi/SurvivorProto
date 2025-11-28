@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemies:
   - enemyId: 0
-    count: 10
-    interval: 0.3
+    count: 6
+    interval: 0.45
   - enemyId: 1
-    count: 4
-    interval: 0.8
+    count: 3
+    interval: 0.55
   - enemyId: 3
-    count: 2
-    interval: 0.1
+    count: 1
+    interval: 1

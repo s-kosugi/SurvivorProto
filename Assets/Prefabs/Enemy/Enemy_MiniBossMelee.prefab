@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 1059160275867468831}
   - component: {fileID: -1124682463073639363}
   - component: {fileID: 3040900770710854653}
+  - component: {fileID: -5397515504171511077}
   m_Layer: 7
   m_Name: Enemy_MiniBossMelee
   m_TagString: Enemy
@@ -118,9 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyId: 5
-  maxHP: 30
-  score: 100
-  dropper: {fileID: 0}
+  dropper: {fileID: -5397515504171511077}
   enemyHitEffect: {fileID: 3040900770710854653}
 --- !u!114 &5004758022986992020
 MonoBehaviour:
@@ -135,7 +134,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBase: {fileID: 3029814948797036346}
-  contactDamage: 1
 --- !u!50 &3515707553177145472
 Rigidbody2D:
   serializedVersion: 4
@@ -261,3 +259,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyRenderer: {fileID: 3432476060679249362}
+--- !u!114 &-5397515504171511077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8963608318197175978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01f732634780974789bde403c667cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropChance: 1
+  dropTable: {fileID: 11400000, guid: c338e47f3f9908047b7541495984e7a8, type: 2}

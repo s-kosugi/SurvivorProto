@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8142616020943755371}
   - component: {fileID: 6391284500901569422}
   m_Layer: 11
-  m_Name: ExpItem_Light
+  m_Name: ExpItem_Large
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: cb9779fb011af184581e5cbf50427e55, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9f6cb2d14430f5946980abdb4901a369, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -163,5 +163,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeTime: 15
   rb: {fileID: 8142616020943755371}
-  pickupEffectPrefab: {fileID: 7347302775788399188, guid: 274d582d37f90404a89a9cfc100413b6, type: 3}
-  expValue: 1
+  expValue: 20

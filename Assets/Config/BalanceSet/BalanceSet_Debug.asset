@@ -34,12 +34,12 @@ MonoBehaviour:
     moveSpeed: 0.7
     score: 20
   - id: 4
-    maxHP: 30
+    maxHP: 60
     attack: 1
     moveSpeed: 1.5
     score: 100
   - id: 5
-    maxHP: 30
+    maxHP: 60
     attack: 1
     moveSpeed: 1.5
     score: 100
