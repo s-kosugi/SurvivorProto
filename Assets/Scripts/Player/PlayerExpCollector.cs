@@ -5,6 +5,7 @@ public class PlayerExpCollector : MonoBehaviour
     [SerializeField] private PlayerCore core;
     [SerializeField] private PlayerController controller;
     [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private PlayerMeleeAttack meleeAttack;
     public event System.Action OnExpChanged;
 
     [Header("Current EXP")]
@@ -118,9 +119,25 @@ public class PlayerExpCollector : MonoBehaviour
 
     private void OnDarkLevelUp()
     {
+        // 基礎攻撃力アップ（従来処理）
         core.attackStats.DarkPower += 1;
-        core.attackStats.DarkComboLevel++;
+
+        // HP成長（従来処理）
         playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
+
+        // コンボ段数・火力の成長を近接へ反映！
+        if (meleeAttack != null)
+        {
+            meleeAttack.ApplyComboCount(darkLevel);
+            meleeAttack.ApplyComboBonus(darkLevel);
+
+            Debug.Log($"[BUFF] 闇攻撃強化（近接成長反映） → Lv{darkLevel}");
+        }
+        else
+        {
+            Debug.LogWarning("[WARN] meleeAttack がセットされていません。成長効果が反映されません！");
+        }
+
         Debug.Log($"[BUFF] 闇攻撃強化 → DarkPower = {core.attackStats.DarkPower}");
     }
 }

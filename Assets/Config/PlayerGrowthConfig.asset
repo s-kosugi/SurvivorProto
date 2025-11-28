@@ -14,5 +14,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseHP: 5
   lightHpUpLevels: 0300000007000000
-  darkHpUpLevels: 02000000040000000600000008000000
+  darkHpUpLevels: 03000000040000000700000008000000
   hpIncreaseAmount: 1
+  darkComboGrowths:
+  - level: 2
+    firstBonus: 0
+    secondBonus: 1
+    thirdBonus: 1
+  - level: 3
+    firstBonus: 0
+    secondBonus: 1
+    thirdBonus: 1
+  - level: 4
+    firstBonus: 0
+    secondBonus: 2
+    thirdBonus: 2
+  - level: 5
+    firstBonus: 1
+    secondBonus: 2
+    thirdBonus: 2
+  - level: 6
+    firstBonus: 1
+    secondBonus: 2
+    thirdBonus: 3
+  - level: 7
+    firstBonus: 1
+    secondBonus: 3
+    thirdBonus: 3
+  - level: 8
+    firstBonus: 2
+    secondBonus: 3
+    thirdBonus: 4
+  darkComboCountGrowths:
+  - level: 1
+    maxCombo: 1
+  - level: 2
+    maxCombo: 2
+  - level: 5
+    maxCombo: 3

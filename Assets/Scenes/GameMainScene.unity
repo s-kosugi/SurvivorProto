@@ -7699,6 +7699,7 @@ MonoBehaviour:
   playerController: {fileID: 1374674987}
   core: {fileID: 1374674994}
   playerMovement: {fileID: 1374674995}
+  growthConfig: {fileID: 11400000, guid: aed0fbaad4c64c74c83a2039b84d43de, type: 2}
   attackCooldown: 0.5
   attackRange: 1.8
   attackAngle: 120
@@ -7707,8 +7708,6 @@ MonoBehaviour:
   attackRecoveryDuration: 0.12
   moveLockDuration: 0.25
   stepForwardDistance: 0.25
-  baseComboCount: 2
-  maxComboLimit: 5
   comboInputWindow: 0.6
   attackOrigin: {fileID: 241084084}
   attackEffectPrefab: {fileID: 6242566773016071314, guid: 6f8a6d27a905ce247b8da1b4737ab48a, type: 3}
@@ -7768,6 +7767,7 @@ MonoBehaviour:
   core: {fileID: 1374674994}
   controller: {fileID: 1374674987}
   playerHealth: {fileID: 1374674989}
+  meleeAttack: {fileID: 1374674990}
   lightExp: 0
   darkExp: 0
   isLightForm: 1

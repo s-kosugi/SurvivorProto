@@ -6,6 +6,7 @@ public class PlayerMeleeAttack : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerCore core;
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerGrowthConfig growthConfig;
 
     [Header("Attack Settings")]
     public float attackCooldown = 0.5f;
@@ -23,17 +24,12 @@ public class PlayerMeleeAttack : MonoBehaviour
     private bool bufferedInput = false;
 
     [Header("Combo Settings")]
-    [SerializeField] private int baseComboCount = 2; // 初期段数（Lv1の段階）
-    [SerializeField] private int maxComboLimit = 5;  // 最大段数（成長上限）
     [SerializeField] private float comboInputWindow = 0.20f;
-    private int MaxCombo
-    {
-        get
-        {
-            int combo = baseComboCount + core.attackStats.DarkComboLevel;
-            return Mathf.Min(combo, maxComboLimit);
-        }
-    }
+
+    private int currentMaxCombo = 1;  // 初期状態
+    private int bonusFirst = 0;
+    private int bonusSecond = 0;
+    private int bonusThird = 0;
 
     private int currentComboStep = 0;
     private float comboTimer = 0f;
@@ -128,13 +124,13 @@ public class PlayerMeleeAttack : MonoBehaviour
         playerController.EndMeleeAttack();
 
         // 次段が存在するなら入力待ち
-        if (currentComboStep < MaxCombo && bufferedInput)
+        if (currentComboStep < currentMaxCombo  && bufferedInput)
         {
             bufferedInput = false;
             currentComboStep++;
             StartCoroutine(DoAttack());
         }
-        else if (currentComboStep >= MaxCombo)
+        else if (currentComboStep >= currentMaxCombo )
         {
             // 3段目後はフィニッシュ
             ResetCombo();
@@ -203,7 +199,8 @@ public class PlayerMeleeAttack : MonoBehaviour
             // 通常敵
             if (hit.TryGetComponent(out EnemyBase enemy))
             {
-                enemy.TakeDamage(attackDamage, AttackType.Melee, this.transform.position);
+                int bonus = GetComboBonus(currentComboStep);
+                enemy.TakeDamage(attackDamage + bonus, AttackType.Melee, this.transform.position);
 
                 if (hit.TryGetComponent(out Rigidbody2D rb))
                 {
@@ -212,6 +209,51 @@ public class PlayerMeleeAttack : MonoBehaviour
                 continue;
             }
         }
+    }
+
+    // レベルからコンボボーナスを適用
+    public void ApplyComboBonus(int darkLevel)
+    {
+        bonusFirst = 0;
+        bonusSecond = 0;
+        bonusThird = 0;
+
+        foreach (var g in growthConfig.darkComboGrowths)
+        {
+            if (darkLevel >= g.level)
+            {
+                bonusFirst += g.firstBonus;
+                bonusSecond += g.secondBonus;
+                bonusThird += g.thirdBonus;
+            }
+        }
+    }
+    // レベルから最大コンボ数を適用
+    public void ApplyComboCount(int darkLevel)
+    {
+        int result = 1;
+
+        foreach (var g in growthConfig.darkComboCountGrowths)
+        {
+            if (darkLevel >= g.level)
+                result = g.maxCombo;
+        }
+
+        currentMaxCombo = result;
+    }
+    /// <summary>
+    /// コンボダメージボーナス取得
+    /// </summary>
+    private int GetComboBonus(int step)
+    {
+        step = Mathf.Min(step, 3); // 4段目以降は3段目扱い
+        switch (step)
+        {
+            case 1: return bonusFirst;
+            case 2: return bonusSecond;
+            case 3: return bonusThird;
+        }
+        return 0;
     }
     private float GetAttackRadius(int step)
     {

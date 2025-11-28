@@ -10,7 +10,6 @@ public class PlayerAttackStats
     public int DarkPower = 0;
     public float DarkSpeedBonus = 0f;
     public int DarkShotLevel = 0;
-    public int DarkComboLevel = 0;
 
     // 必要ならメソッドも追加可能
 }
