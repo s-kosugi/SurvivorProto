@@ -7679,6 +7679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c171c920b4fd69648abcc8c5aff6804a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  expCollector: {fileID: 1374674993}
   maxHP: 5
   invincibleTime: 1
   spriteRenderer: {fileID: 1374674983}

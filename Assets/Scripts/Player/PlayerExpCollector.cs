@@ -55,6 +55,19 @@ public class PlayerExpCollector : MonoBehaviour
         // 必要EXPが1未満になることを避ける（序盤の安定化）
         return Mathf.Max(required, baseExp);
     }
+    /// <summary>
+    /// デスペナルティ
+    /// </summary>
+    public void ApplyDeathPenalty()
+    {
+        // Light / Dark の経験値だけゼロクリア（レベルは維持）
+        lightExp = 0;
+        darkExp  = 0;
+
+        // 必要ならUI更新イベントなどを呼ぶ
+        OnExpChanged?.Invoke();
+    }
+
 
     // -----------------------
     //   Light Level Up

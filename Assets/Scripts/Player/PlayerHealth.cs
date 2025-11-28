@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
+    [SerializeField] PlayerExpCollector expCollector;
+
     [Header("----- HP Settings -----")]
     [SerializeField] private int maxHP = 5;
     private int currentHP;
@@ -89,6 +91,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         // 先にイベント通知
         DeathEvent?.Invoke();
+
+        // デスペナルティ適用
+        expCollector.ApplyDeathPenalty();
 
         // ゲーム側終了処理（必要なら残す）
         GameManager.Instance?.EndGame();
