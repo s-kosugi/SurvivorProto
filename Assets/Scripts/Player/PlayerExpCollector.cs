@@ -4,6 +4,7 @@ public class PlayerExpCollector : MonoBehaviour
 {
     [SerializeField] private PlayerCore core;
     [SerializeField] private PlayerController controller;
+    [SerializeField] private PlayerHealth playerHealth;
     public event System.Action OnExpChanged;
 
     [Header("Current EXP")]
@@ -11,7 +12,7 @@ public class PlayerExpCollector : MonoBehaviour
     public int darkExp = 0;
 
     [Header("Current Form")]
-    public bool isLightForm = true;  
+    public bool isLightForm = true;
 
     [Header("Current Level")]
     public int lightLevel = 1;
@@ -111,6 +112,7 @@ public class PlayerExpCollector : MonoBehaviour
     {
         core.attackStats.LightPower += 1;
         core.attackStats.LightShotLevel++;
+        playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
         Debug.Log($"[BUFF] 光攻撃強化 → LightPower = {core.attackStats.LightPower}");
     }
 
@@ -118,6 +120,7 @@ public class PlayerExpCollector : MonoBehaviour
     {
         core.attackStats.DarkPower += 1;
         core.attackStats.DarkComboLevel++;
+        playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
         Debug.Log($"[BUFF] 闇攻撃強化 → DarkPower = {core.attackStats.DarkPower}");
     }
 }

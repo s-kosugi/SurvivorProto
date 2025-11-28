@@ -5,6 +5,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [SerializeField] PlayerExpCollector expCollector;
 
     [Header("----- HP Settings -----")]
+    [SerializeField] private PlayerGrowthConfig growthConfig;
     [SerializeField] private int maxHP = 5;
     private int currentHP;
 
@@ -80,6 +81,37 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         currentHP += amount;
         if (currentHP > maxHP) currentHP = maxHP;
+
+        HealthChanged?.Invoke(currentHP, maxHP);
+    }
+    /// <summary>
+    /// 最大HP設定
+    /// </summary>
+    public void RecalculateMaxHP(int lightLevel, int darkLevel)
+    {
+        int newMax = growthConfig.baseHP;
+
+        // Light側の成長判定
+        foreach (int lv in growthConfig.lightHpUpLevels)
+        {
+            if (lightLevel >= lv)
+            {
+                newMax += growthConfig.hpIncreaseAmount;
+            }
+        }
+
+        // Dark側の成長判定
+        foreach (int lv in growthConfig.darkHpUpLevels)
+        {
+            if (darkLevel >= lv)
+            {
+                newMax += growthConfig.hpIncreaseAmount;
+            }
+        }
+
+        // 適用
+        maxHP = newMax;
+        currentHP = Mathf.Clamp(currentHP, 0, maxHP);
 
         HealthChanged?.Invoke(currentHP, maxHP);
     }
