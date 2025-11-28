@@ -22,7 +22,41 @@ public class PlayerGrowthConfig : ScriptableObject
     [Header("HP Increase Amount per Trigger")]
     public int hpIncreaseAmount = 1;
 
+    // ============================
+    // ■ Light（射撃）正面ショット成長設定
+    // ============================
 
+    [System.Serializable]
+    public class LightFrontShotGrowth
+    {
+        [Tooltip("この Light レベル以上で適用")]
+        public int level;
+
+        [Tooltip("扇形に撃つ弾数")]
+        public int frontShotCount;
+
+        [Tooltip("前方扇形の角度（例：45 → ±22.5°の範囲）")]
+        public float frontAngle;
+    }
+    [Header("Light Front Shot Growth")]
+    public LightFrontShotGrowth[] lightFrontShotGrowths;
+
+    // ============================
+    // ■ Light（射撃）N-Way成長設定
+    // ============================
+
+    [System.Serializable]
+    public class LightNWayGrowth
+    {
+        [Tooltip("この Light レベル以上で適用")]
+        public int level;
+
+        [Tooltip("N-Way の弾数 (2,3,5,7 etc)")]
+        public int nWayCount;
+    }
+
+    [Header("Light N-Way Shot Growth")]
+    public LightNWayGrowth[] lightNWayGrowths;
 
     // ============================
     // ■ 近接攻撃（Dark）コンボ火力成長設定

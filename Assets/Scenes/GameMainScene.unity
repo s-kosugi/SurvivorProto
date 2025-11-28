@@ -7666,6 +7666,8 @@ MonoBehaviour:
   firePoint: {fileID: 1374674984}
   playerController: {fileID: 1374674987}
   core: {fileID: 1374674994}
+  playerMovement: {fileID: 1374674995}
+  growthConfig: {fileID: 11400000, guid: aed0fbaad4c64c74c83a2039b84d43de, type: 2}
   shootCooldown: 0.3
 --- !u!114 &1374674989
 MonoBehaviour:
@@ -7768,6 +7770,7 @@ MonoBehaviour:
   controller: {fileID: 1374674987}
   playerHealth: {fileID: 1374674989}
   meleeAttack: {fileID: 1374674990}
+  playerShooting: {fileID: 1374674988}
   lightExp: 0
   darkExp: 0
   isLightForm: 1

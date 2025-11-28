@@ -16,6 +16,30 @@ MonoBehaviour:
   lightHpUpLevels: 0300000007000000
   darkHpUpLevels: 03000000040000000700000008000000
   hpIncreaseAmount: 1
+  lightFrontShotGrowths:
+  - level: 1
+    frontShotCount: 0
+    frontAngle: 0
+  - level: 2
+    frontShotCount: 2
+    frontAngle: 20
+  - level: 4
+    frontShotCount: 3
+    frontAngle: 30
+  - level: 6
+    frontShotCount: 4
+    frontAngle: 40
+  lightNWayGrowths:
+  - level: 1
+    nWayCount: 4
+  - level: 3
+    nWayCount: 12
+  - level: 5
+    nWayCount: 18
+  - level: 7
+    nWayCount: 24
+  - level: 8
+    nWayCount: 32
   darkComboGrowths:
   - level: 2
     firstBonus: 0

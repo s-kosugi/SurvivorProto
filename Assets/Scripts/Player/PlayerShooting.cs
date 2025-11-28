@@ -8,6 +8,14 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerCore core;
+    [SerializeField] private PlayerMovement playerMovement;
+    public PlayerGrowthConfig growthConfig;
+
+    [Header("Current Light Stats")]
+    private int frontShotCount = 1;
+    private float frontAngle = 0f; // 扇形の角度
+
+    private int nWayCount = 0;
 
     [Header("Shoot Settings")]
     [SerializeField] private float shootCooldown = 0.3f;
@@ -19,6 +27,7 @@ public class PlayerShooting : MonoBehaviour
     void Awake()
     {
         controls = new PlayerControls();
+        ApplyLightGrowth(1);
     }
 
     void OnEnable()
@@ -56,22 +65,67 @@ public class PlayerShooting : MonoBehaviour
     }
 
     /// <summary>
-    /// 光モードの攻撃（360°全方向ショット）
+    /// 光モードの攻撃（nWay弾＋前方扇ショット)
     /// </summary>
-        void ShootLight()
+    void ShootLight()
     {
-        int count = GetLightSpreadCount();
-        float angleStep = 360f / count;
+        // --- 正面ショット（扇形） ---
+        if (frontShotCount > 0)
+            ShootFrontShots(frontShotCount, frontAngle);
+
+        // --- 全方向ショット（NWay） ---
+        if (nWayCount > 1)
+            ShootNWay(nWayCount);
+    }
+    /// <summary>
+    /// 前方ショット
+    /// </summary>
+    void ShootFrontShots(int count, float angle)
+    {
+        if (count <= 0) return;
+
+        // プレイヤーの向き取得
+        bool isFacingLeft = playerMovement != null && playerMovement.IsFacingLeft;
+
+        if (count == 1)
+        {
+            if( isFacingLeft )
+                SpawnBullet(Vector2.left);
+            else
+               SpawnBullet(Vector2.right);
+            return;
+        }
+        // 扇形の中心角（右向きは0°, 左向きは180°）
+        float baseAngle = isFacingLeft ? 180f : 0f;
+
+        float half = angle * 0.5f;
+        float step = angle / (count - 1);
 
         for (int i = 0; i < count; i++)
         {
-            float angle = angleStep * i;
+            float offset = -half + step * i;
+            float totalAngle = baseAngle + offset;
+            float rad = totalAngle * Mathf.Deg2Rad;
+
+            Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)).normalized;
+            SpawnBullet(dir);
+        }
+    }
+    /// <summary>
+    /// Nway弾(360度)
+    /// </summary>
+    /// <param name="count"></param>
+    void ShootNWay(int count)
+    {
+        float step = 360f / count;
+
+        for (int i = 0; i < count; i++)
+        {
+            float angle = step * i;
             float rad = angle * Mathf.Deg2Rad;
 
             Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)).normalized;
-
-            var bulletObj = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-            bulletObj.GetComponent<Bullet>().SetDirection(dir);
+            SpawnBullet(dir);
         }
     }
 
@@ -82,18 +136,43 @@ public class PlayerShooting : MonoBehaviour
     {
         
     }
-
-    int GetLightSpreadCount()
+    /// <summary>
+    /// 成長値の適用
+    /// </summary>
+    /// <param name="lightLevel"></param>
+    public void ApplyLightGrowth(int lightLevel)
     {
-        // 強化段階 → 弾数変換
-        switch (core.attackStats.LightShotLevel)
+        // ---- 正面ショット成長 ----
+        foreach (var g in growthConfig.lightFrontShotGrowths)
         {
-            case 0: return 4;   // 初期
-            case 1: return 8;
-            case 2: return 16;
-            case 3: return 24;  // 好みで追加
-            default: return 32; // 最終系
+            if (lightLevel >= g.level)
+            {
+                frontShotCount = g.frontShotCount;
+                frontAngle = g.frontAngle;
+            }
         }
+
+        // ---- 全方向 N-Way 成長 ----
+        nWayCount = 0;
+        foreach (var g in growthConfig.lightNWayGrowths)
+        {
+            if (lightLevel >= g.level)
+            {
+                nWayCount = g.nWayCount;
+            }
+        }
+
+        Debug.Log($"[LightGrowth] Lv{lightLevel}: Front={frontShotCount}, Angle={frontAngle}, NWay={nWayCount}");
+    }
+
+    /// <summary>
+    /// 弾生成
+    /// </summary>
+    /// <param name="dir"></param>
+    void SpawnBullet(Vector2 dir)
+    {
+        var obj = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        obj.GetComponent<Bullet>().SetDirection(dir);
     }
 
 }

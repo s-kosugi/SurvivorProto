@@ -6,6 +6,7 @@ public class PlayerExpCollector : MonoBehaviour
     [SerializeField] private PlayerController controller;
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private PlayerMeleeAttack meleeAttack;
+    [SerializeField] private PlayerShooting playerShooting;
     public event System.Action OnExpChanged;
 
     [Header("Current EXP")]
@@ -112,7 +113,7 @@ public class PlayerExpCollector : MonoBehaviour
     private void OnLightLevelUp()
     {
         core.attackStats.LightPower += 1;
-        core.attackStats.LightShotLevel++;
+        playerShooting.ApplyLightGrowth(lightLevel);
         playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
         Debug.Log($"[BUFF] 光攻撃強化 → LightPower = {core.attackStats.LightPower}");
     }

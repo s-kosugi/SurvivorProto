@@ -54,6 +54,8 @@ public class PlayerMeleeAttack : MonoBehaviour
     void Awake()
     {
         controls = new PlayerControls();
+        ApplyComboBonus(1);
+        ApplyComboCount(1);
     }
 
     void OnEnable()
