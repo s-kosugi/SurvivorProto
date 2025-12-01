@@ -39,6 +39,7 @@ public class WaveEventManager : MonoBehaviour
     // ============================================================
     public void ForceStartMiniBoss(MiniBossConfig config)
     {
+        SoundManager.Instance.PlaySE("Beep");
         OnMiniBossStart?.Invoke();
         SpawnMiniBoss(config);
     }
@@ -75,6 +76,7 @@ public class WaveEventManager : MonoBehaviour
             // 回復
             player?.health.RecoverHP(hpRecoveryAmount);
 
+            SoundManager.Instance.PlaySE("BossDead");
             // ウェーブクリア通知
             OnMiniBossCleared?.Invoke();
 

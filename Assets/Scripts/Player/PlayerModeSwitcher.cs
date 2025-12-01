@@ -58,6 +58,8 @@ public class PlayerModeSwitcher : MonoBehaviour
         // ステータス
         controller.ApplyModeStatsFromOutside();
 
+        SoundManager.Instance.PlaySE("FormChange");
+
         // ラグ
         yield return new WaitForSeconds(switchLag);
 

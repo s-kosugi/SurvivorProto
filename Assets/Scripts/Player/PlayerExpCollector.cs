@@ -115,15 +115,16 @@ public class PlayerExpCollector : MonoBehaviour
         core.attackStats.LightPower += 1;
         playerShooting.ApplyLightGrowth(lightLevel);
         playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
+        SoundManager.Instance.PlaySE("LevelUpLight");
         Debug.Log($"[BUFF] 光攻撃強化 → LightPower = {core.attackStats.LightPower}");
     }
 
     private void OnDarkLevelUp()
     {
-        // 基礎攻撃力アップ（従来処理）
+        // 基礎攻撃力アップ
         core.attackStats.DarkPower += 1;
 
-        // HP成長（従来処理）
+        // HP成長
         playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
 
         // コンボ段数・火力の成長を近接へ反映！
@@ -138,7 +139,7 @@ public class PlayerExpCollector : MonoBehaviour
         {
             Debug.LogWarning("[WARN] meleeAttack がセットされていません。成長効果が反映されません！");
         }
-
+        SoundManager.Instance.PlaySE("LevelUpDark");
         Debug.Log($"[BUFF] 闇攻撃強化 → DarkPower = {core.attackStats.DarkPower}");
     }
 }

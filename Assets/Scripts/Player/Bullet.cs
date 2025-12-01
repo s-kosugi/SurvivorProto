@@ -87,6 +87,7 @@ public class Bullet : MonoBehaviour
                 lightWeak.ApplyWeaknessDamage(damage, PlayerModeState.Light,
                                               AttackType.Bullet, hitDir);
 
+                SoundManager.Instance.PlaySE("ShotDamage");
                 Destroy(gameObject);
                 return;
             }
@@ -100,6 +101,7 @@ public class Bullet : MonoBehaviour
                 darkWeak.ApplyWeaknessDamage(damage, PlayerModeState.Light,
                                              AttackType.Bullet, hitDir);
 
+                SoundManager.Instance.PlaySE("ShotDamage");
                 Destroy(gameObject);
                 return;
             }
@@ -108,6 +110,7 @@ public class Bullet : MonoBehaviour
             if (other.TryGetComponent(out IDamageable target))
             {
                 target.TakeDamage(damage, AttackType.Bullet, transform.position);
+                SoundManager.Instance.PlaySE("ShotDamage");
                 Destroy(gameObject);
                 return;
             }

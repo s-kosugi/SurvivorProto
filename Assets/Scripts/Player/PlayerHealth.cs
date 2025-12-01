@@ -82,6 +82,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         currentHP += amount;
         if (currentHP > maxHP) currentHP = maxHP;
 
+        SoundManager.Instance.PlaySE("HealItem");
         HealthChanged?.Invoke(currentHP, maxHP);
     }
     /// <summary>

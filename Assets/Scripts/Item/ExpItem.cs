@@ -25,6 +25,7 @@ public class ExpItem : ItemBase
         // 経験値付与
         if (player != null && player.expCollector != null)
         {
+            SoundManager.Instance.PlaySE("ExpGet");
             player.expCollector.AddExp(expValue);
         }
 

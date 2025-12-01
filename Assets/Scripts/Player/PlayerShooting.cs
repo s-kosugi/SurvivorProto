@@ -92,7 +92,7 @@ public class PlayerShooting : MonoBehaviour
             if( isFacingLeft )
                 SpawnBullet(Vector2.left);
             else
-               SpawnBullet(Vector2.right);
+                SpawnBullet(Vector2.right);
             return;
         }
         // 扇形の中心角（右向きは0°, 左向きは180°）
@@ -173,6 +173,8 @@ public class PlayerShooting : MonoBehaviour
     {
         var obj = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         obj.GetComponent<Bullet>().SetDirection(dir);
+        // 弾発射音
+        SoundManager.Instance.PlaySE("SmallShot");
     }
 
 }
