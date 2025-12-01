@@ -21,7 +21,8 @@ public class PlayerExpCollector : MonoBehaviour
     public int darkLevel = 1;
 
     [Header("Level Settings")]
-    public int baseExp = 10;
+    [SerializeField] private int baseExp = 10;
+    [SerializeField] private float deathPenaltRate = 0.7f;
 
     private void Awake()
     {
@@ -63,9 +64,9 @@ public class PlayerExpCollector : MonoBehaviour
     /// </summary>
     public void ApplyDeathPenalty()
     {
-        // Light / Dark の経験値だけゼロクリア（レベルは維持）
-        lightExp = 0;
-        darkExp  = 0;
+        // Light / Dark の経験値をレートをかけて減らす
+        lightExp = Mathf.FloorToInt(lightExp * deathPenaltRate);
+        darkExp  = Mathf.FloorToInt(darkExp * deathPenaltRate);
 
         // 必要ならUI更新イベントなどを呼ぶ
         OnExpChanged?.Invoke();

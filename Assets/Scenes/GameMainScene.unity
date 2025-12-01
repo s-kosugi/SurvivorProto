@@ -8124,8 +8124,8 @@ GameObject:
   - component: {fileID: 1374674990}
   - component: {fileID: 1374674997}
   - component: {fileID: 1374674992}
-  - component: {fileID: 1374674991}
   - component: {fileID: 1374674993}
+  - component: {fileID: 1374674991}
   m_Layer: 3
   m_Name: PlayerCharacter1
   m_TagString: Player
@@ -8422,6 +8422,7 @@ MonoBehaviour:
   lightLevel: 1
   darkLevel: 1
   baseExp: 10
+  deathPenaltRate: 0.7
 --- !u!114 &1374674994
 MonoBehaviour:
   m_ObjectHideFlags: 0
