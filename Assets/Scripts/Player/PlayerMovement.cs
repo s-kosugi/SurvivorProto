@@ -7,6 +7,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PlayerVisuals playerVisuals;
     [SerializeField] private PlayerController controller;
 
+    [Header("Safe Area Clamp")]
+    [SerializeField] private float minX = -15f;
+    [SerializeField] private float maxX = 15f;
+    [SerializeField] private float minY = -25f;
+    [SerializeField] private float maxY = 25f;
+
     private Vector2 moveInput = Vector2.zero;
     private Vector2 lastMoveDir = Vector2.right;
 
@@ -54,6 +60,22 @@ public class PlayerMovement : MonoBehaviour
         if (!controller.CanMove()) return;
 
         rb.MovePosition(rb.position + moveInput * controller.CurrentMoveSpeed * Time.fixedDeltaTime);
+    }
+    void LateUpdate()
+    {
+        ClampPosition();
+    }
+    /// <summary>
+    /// プレイヤーを安全領域に固定
+    /// </summary>
+    private void ClampPosition()
+    {
+        Vector3 pos = transform.position;
+
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+
+        transform.position = pos;
     }
     /// <summary>
     /// 移動停止
