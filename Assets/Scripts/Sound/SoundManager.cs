@@ -64,9 +64,15 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else { Destroy(gameObject); return; }
+        if (Instance != null)
+        {
+            // すでにSoundManagerが存在する → 今生成されたやつを破棄
+            Destroy(gameObject);
+            return;
+        }
 
+        // 初回だけ登録＆永続化
+        Instance = this;
         DontDestroyOnLoad(gameObject);
 
         // SEDictionary
