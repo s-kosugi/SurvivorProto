@@ -56,7 +56,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     // ======================================================
     //  ダメージ処理
     // ======================================================
-    public void TakeDamage(int damage, AttackType attackType, Vector3 attackerPos)
+    public void TakeDamage(EnemyID enemyId,int damage, AttackType attackType, Vector3 attackerPos)
     {
         // 無敵中はダメージ無効
         if (isInvincible) return;
@@ -70,6 +70,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         if (currentHP <= 0)
         {
+            SessionData.KilledBy = enemyId;
             Die();
         }
     }

@@ -82,6 +82,7 @@ public class EnemyExplosionAttack : MonoBehaviour
             if (currentDist < explosionRange)
             {
                 PlayerManager.Instance.MainPlayer.health?.TakeDamage(
+                    enemyBase.EnemyId,
                     explosionDamageRate * baseDamage,
                     AttackType.Explosion,
                     transform.position

@@ -76,7 +76,7 @@ public class MiniBossRanged : MonoBehaviour
             );
 
             var b = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            b.Init(dir, BulletOwner.Enemy, bulletDamage, danmakuBulletSpeed);
+            b.Init(dir, BulletOwner.Enemy, bulletDamage, danmakuBulletSpeed,enemyBase.EnemyId);
         }
     }
 
@@ -88,7 +88,7 @@ public class MiniBossRanged : MonoBehaviour
         Vector2 dir = (player.position - transform.position).normalized;
 
         var b = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-        b.Init(dir, BulletOwner.Enemy, snipeBulletDamageRate * bulletDamage, aimBulletSpeed);
+        b.Init(dir, BulletOwner.Enemy, snipeBulletDamageRate * bulletDamage, aimBulletSpeed,enemyBase.EnemyId);
     }
 
     /// <summary>

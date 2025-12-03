@@ -202,7 +202,7 @@ public class PlayerMeleeAttack : MonoBehaviour
             if (hit.TryGetComponent(out EnemyBase enemy))
             {
                 int bonus = GetComboBonus(currentComboStep);
-                enemy.TakeDamage(attackDamage + bonus, AttackType.Melee, this.transform.position);
+                enemy.TakeDamage(EnemyID.Dummy,attackDamage + bonus, AttackType.Melee, this.transform.position);
 
                 if (hit.TryGetComponent(out Rigidbody2D rb))
                 {

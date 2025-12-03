@@ -68,7 +68,7 @@ public class EnemyDarkWeak : MonoBehaviour
         var b = Instantiate(bulletPrefab, transform.position, Quaternion.identity)
                 .GetComponent<Bullet>();
 
-        b.Init(dir, BulletOwner.Enemy, shootDamage,bulletSpeed);
+        b.Init(dir, BulletOwner.Enemy, shootDamage,bulletSpeed,enemyBase.EnemyId);
     }
 
     // ======================================================
@@ -83,7 +83,7 @@ public class EnemyDarkWeak : MonoBehaviour
         var cb = Instantiate(counterBulletPrefab, transform.position, Quaternion.identity)
                     .GetComponent<Bullet>();
 
-        cb.Init(dir, BulletOwner.Enemy, counterDamage,counterSpeed);
+        cb.Init(dir, BulletOwner.Enemy, counterDamage,counterSpeed,enemyBase.EnemyId);
     }
 
 
@@ -106,7 +106,7 @@ public class EnemyDarkWeak : MonoBehaviour
             final *= lightBulletMultiplier;
         }
 
-        enemyBase.TakeDamage(Mathf.RoundToInt(final), type, transform.position);
+        enemyBase.TakeDamage(enemyBase.EnemyId, Mathf.RoundToInt(final), type, transform.position);
     }
 
     private void Knockback(Vector2 dir)

@@ -28,7 +28,7 @@ public class EnemyBase : MonoBehaviour, IDamageable
         score = stat.score;
     }
 
-    public void TakeDamage(int damage,AttackType attackType,Vector3 attackerPos)
+    public void TakeDamage(EnemyID enemyID,int damage,AttackType attackType,Vector3 attackerPos)
     {
         currentHP -= damage;
 

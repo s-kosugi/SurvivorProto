@@ -7,6 +7,7 @@ public class EnemyLightWeak : MonoBehaviour
     [SerializeField] private float darkMeleeMultiplier = 1f;
     [SerializeField] private float meleeHardness = 0.8f;
     [SerializeField] private float knockbackPower = 0.2f;
+    [SerializeField] private EnemyBase enemyBase;
 
     public void ApplyWeaknessDamage(int dmg, PlayerModeState form, AttackType type, Vector2 hitDir)
     {
@@ -26,6 +27,6 @@ public class EnemyLightWeak : MonoBehaviour
             finalDamage *= darkMeleeMultiplier;
         }
 
-        health.TakeDamage(Mathf.RoundToInt(finalDamage), type, transform.position);
+        health.TakeDamage(enemyBase.EnemyId,Mathf.RoundToInt(finalDamage), type, transform.position);
     }
 }

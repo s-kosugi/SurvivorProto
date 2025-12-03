@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -72,9 +73,23 @@ public class GameManager : MonoBehaviour
     {
         if (state == GameState.GameOver) return;
 
-        Time.timeScale = 0f;
         state = GameState.GameOver;
-        gameOverUI.Show(score);
+        Time.timeScale = 1f; // ← DefeatSceneは動くので1に戻しておく
+
+        // --- ★ SessionData に結果を保存する ---
+        SessionData.LightLevel = core.expCollector.lightLevel;
+        SessionData.DarkLevel = core.expCollector.darkLevel;
+
+        SessionData.LightExp = core.expCollector.lightExp;
+        SessionData.DarkExp = core.expCollector.darkExp;
+
+        SessionData.Score = score;
+
+        // βで使う敵ID（今は空でもOK）
+        //SessionData.KilledBy = core.health.LastDamageSourceID;
+
+        // --- ★ DefeatScene へ遷移する ---
+        SceneManager.LoadScene("DefeatScene");
     }
 
     public void RestartGame()

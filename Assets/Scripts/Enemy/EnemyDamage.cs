@@ -20,7 +20,7 @@ public class EnemyDamage : MonoBehaviour
         {
             if (collision.gameObject.TryGetComponent(out IDamageable target))
             {
-                target.TakeDamage(contactDamage, AttackType.Melee,collision.gameObject.transform.position);
+                target.TakeDamage(enemyBase.EnemyId,contactDamage, AttackType.Melee,collision.gameObject.transform.position);
             }
         }
     }

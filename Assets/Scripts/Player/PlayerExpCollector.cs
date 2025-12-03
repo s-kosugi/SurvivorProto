@@ -26,8 +26,24 @@ public class PlayerExpCollector : MonoBehaviour
 
     private void Awake()
     {
+        // ----------- セーブデータ読み込み -----------
+        lightLevel = SessionData.LightLevel <= 0 ? 1 : SessionData.LightLevel;
+        darkLevel  = SessionData.DarkLevel  <= 0 ? 1 : SessionData.DarkLevel;
+
+        lightExp = Mathf.Max(SessionData.LightExp, 0);
+        darkExp  = Mathf.Max(SessionData.DarkExp, 0);
+
+    }
+    private void Start()
+    {
+        // ----------- 現在のレベルに応じた成長反映（SEなし） -----------
+        ApplyLightGrowthRaw();
+        ApplyDarkGrowthRaw();
     }
 
+    // ===========================
+    //       EXP ADD
+    // ===========================
     public void AddExp(int amount)
     {
         if (controller.ModeState == PlayerModeState.Light)
@@ -45,37 +61,31 @@ public class PlayerExpCollector : MonoBehaviour
         OnExpChanged?.Invoke();  // UIへ通知
     }
 
-    /// <summary>
-    /// 必要経験値、ゆる指数カーブ
-    /// </summary>
-    /// <param name="level"></param>
-    /// <returns></returns>
+    // ===========================
+    //     必要経験値
+    // ===========================
     public int GetRequiredExp(int level)
     {
-        // 固め指数カーブ（baseExp × 1.5^(level-1)）
         float curve = Mathf.Pow(1.5f, level - 1);
         int required = Mathf.RoundToInt(baseExp * curve);
 
-        // 必要EXPが1未満になることを避ける（序盤の安定化）
         return Mathf.Max(required, baseExp);
     }
-    /// <summary>
-    /// デスペナルティ
-    /// </summary>
+
+    // ===========================
+    //   デスペナルティ
+    // ===========================
     public void ApplyDeathPenalty()
     {
-        // Light / Dark の経験値をレートをかけて減らす
         lightExp = Mathf.FloorToInt(lightExp * deathPenaltRate);
         darkExp  = Mathf.FloorToInt(darkExp * deathPenaltRate);
 
-        // 必要ならUI更新イベントなどを呼ぶ
         OnExpChanged?.Invoke();
     }
 
-
-    // -----------------------
+    // ===========================
     //   Light Level Up
-    // -----------------------
+    // ===========================
     private void TryLevelUpLight()
     {
         int req = GetRequiredExp(lightLevel);
@@ -86,6 +96,8 @@ public class PlayerExpCollector : MonoBehaviour
             lightLevel++;
 
             Debug.Log($"[LEVEL UP] Light → {lightLevel}");
+
+            // 強化適用（SEあり）
             OnLightLevelUp();
 
             req = GetRequiredExp(lightLevel);
@@ -102,44 +114,50 @@ public class PlayerExpCollector : MonoBehaviour
             darkLevel++;
 
             Debug.Log($"[LEVEL UP] Dark → {darkLevel}");
+
+            // 強化適用（SEあり）
             OnDarkLevelUp();
 
             req = GetRequiredExp(darkLevel);
         }
     }
 
-    // -----------------------
-    //   Buff Logic
-    // -----------------------
-    private void OnLightLevelUp()
+    // ===========================
+    //      強化ロジック
+    // ===========================
+
+    // --- SEなし・復元用 ---
+    private void ApplyLightGrowthRaw()
     {
-        core.attackStats.LightPower += 1;
+        // 本来の強化式に合わせて調整（+=1? level分?）
+        core.attackStats.LightPower = lightLevel;
         playerShooting.ApplyLightGrowth(lightLevel);
         playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
+    }
+
+    private void ApplyDarkGrowthRaw()
+    {
+        core.attackStats.DarkPower = darkLevel;
+        playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
+
+        if (meleeAttack != null)
+        {
+            meleeAttack.ApplyComboCount(darkLevel);
+            meleeAttack.ApplyComboBonus(darkLevel);
+        }
+    }
+
+    // --- レベルアップ時（SEあり） ---
+    private void OnLightLevelUp()
+    {
+        ApplyLightGrowthRaw();
         SoundManager.Instance.PlaySE("LevelUpLight");
         Debug.Log($"[BUFF] 光攻撃強化 → LightPower = {core.attackStats.LightPower}");
     }
 
     private void OnDarkLevelUp()
     {
-        // 基礎攻撃力アップ
-        core.attackStats.DarkPower += 1;
-
-        // HP成長
-        playerHealth.RecalculateMaxHP(lightLevel, darkLevel);
-
-        // コンボ段数・火力の成長を近接へ反映！
-        if (meleeAttack != null)
-        {
-            meleeAttack.ApplyComboCount(darkLevel);
-            meleeAttack.ApplyComboBonus(darkLevel);
-
-            Debug.Log($"[BUFF] 闇攻撃強化（近接成長反映） → Lv{darkLevel}");
-        }
-        else
-        {
-            Debug.LogWarning("[WARN] meleeAttack がセットされていません。成長効果が反映されません！");
-        }
+        ApplyDarkGrowthRaw();
         SoundManager.Instance.PlaySE("LevelUpDark");
         Debug.Log($"[BUFF] 闇攻撃強化 → DarkPower = {core.attackStats.DarkPower}");
     }

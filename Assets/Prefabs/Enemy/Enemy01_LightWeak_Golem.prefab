@@ -227,6 +227,7 @@ MonoBehaviour:
   darkMeleeMultiplier: 1
   meleeHardness: 0.8
   knockbackPower: 0.2
+  enemyBase: {fileID: 119735645774664799}
 --- !u!114 &4384098530895018852
 MonoBehaviour:
   m_ObjectHideFlags: 0

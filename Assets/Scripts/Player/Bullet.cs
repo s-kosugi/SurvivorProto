@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float speed = 10f;     // Initで上書き可能
     [SerializeField] private float lifetime = 2f;
     [SerializeField] private int damage = 1;
+    [SerializeField] private EnemyID enemyID = EnemyID.Dummy;
 
     [Header("----- Visual -----")]
     [SerializeField] private bool enableGhost = true;
@@ -19,11 +20,12 @@ public class Bullet : MonoBehaviour
     // ========================================================
     // ★★ Initを拡張して速度まで全セット可能にする ★★
     // ========================================================
-    public void Init(Vector2 dir, BulletOwner owner, int damage, float speed = 10f)
+    public void Init(Vector2 dir, BulletOwner owner, int damage, float speed = 10f,EnemyID enemyID = EnemyID.Dummy)
     {
         this.owner = owner;
         this.damage = damage;
         this.speed = speed;
+        this.enemyID = enemyID;
 
         SetDirection(dir);
     }
@@ -109,7 +111,7 @@ public class Bullet : MonoBehaviour
             // 通常IDamageable
             if (other.TryGetComponent(out IDamageable target))
             {
-                target.TakeDamage(damage, AttackType.Bullet, transform.position);
+                target.TakeDamage(EnemyID.Dummy,damage, AttackType.Bullet, transform.position);
                 SoundManager.Instance.PlaySE("ShotDamage");
                 Destroy(gameObject);
                 return;
@@ -119,7 +121,7 @@ public class Bullet : MonoBehaviour
         {
             if (other.TryGetComponent(out PlayerHealth player))
             {
-                player.TakeDamage(damage, AttackType.Bullet, transform.position);
+                player.TakeDamage(enemyID,damage, AttackType.Bullet, transform.position);
                 Destroy(gameObject);
                 return;
             }
