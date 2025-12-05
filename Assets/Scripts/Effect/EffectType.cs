@@ -4,5 +4,7 @@ public enum EffectType
     MeleeHit = 1,
     ShotHit,
     Slash,
-    ExpPickup
+    ExpPickup,
+    LevelUpLight,
+    LevelUpDark,
 }

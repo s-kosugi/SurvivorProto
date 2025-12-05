@@ -9,6 +9,8 @@ public class EffectLibrary : MonoBehaviour
     [SerializeField] private GameObject bulletHitEffectPrefab;
     [SerializeField] private GameObject slashEffectPrefab;
     [SerializeField] private GameObject expPickupEffectPrefab;
+    [SerializeField] private GameObject levelUpLightPrefab;
+    [SerializeField] private GameObject levelUpDarkPrefab;
 
     private Transform effectRoot;
 
@@ -38,6 +40,9 @@ public class EffectLibrary : MonoBehaviour
             EffectType.ShotHit => bulletHitEffectPrefab,
             EffectType.Slash => slashEffectPrefab,
             EffectType.ExpPickup => expPickupEffectPrefab,
+            EffectType.LevelUpLight => levelUpLightPrefab,
+            EffectType.LevelUpDark  => levelUpDarkPrefab,
+
             _ => null
         };
 
@@ -54,6 +59,12 @@ public class EffectLibrary : MonoBehaviour
             {
                 psRenderer.sortingLayerID = targetRenderer.sortingLayerID;
                 psRenderer.sortingOrder = targetRenderer.sortingOrder + sortingOffset;
+            }
+            var spRenderer = fx.GetComponentInChildren<SpriteRenderer>();
+            if (spRenderer != null)
+            {
+                spRenderer.sortingLayerID = targetRenderer.sortingLayerID;
+                spRenderer.sortingOrder = targetRenderer.sortingOrder + sortingOffset;
             }
         }
     }

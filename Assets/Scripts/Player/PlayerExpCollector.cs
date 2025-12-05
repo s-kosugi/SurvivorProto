@@ -97,7 +97,7 @@ public class PlayerExpCollector : MonoBehaviour
 
             Debug.Log($"[LEVEL UP] Light → {lightLevel}");
 
-            // 強化適用（SEあり）
+            // 強化適用（演出あり）
             OnLightLevelUp();
 
             req = GetRequiredExp(lightLevel);
@@ -115,7 +115,7 @@ public class PlayerExpCollector : MonoBehaviour
 
             Debug.Log($"[LEVEL UP] Dark → {darkLevel}");
 
-            // 強化適用（SEあり）
+            // 強化適用（演出あり）
             OnDarkLevelUp();
 
             req = GetRequiredExp(darkLevel);
@@ -147,11 +147,12 @@ public class PlayerExpCollector : MonoBehaviour
         }
     }
 
-    // --- レベルアップ時（SEあり） ---
+    // --- レベルアップ時（演出あり） ---
     private void OnLightLevelUp()
     {
         ApplyLightGrowthRaw();
         SoundManager.Instance.PlaySE("LevelUpLight");
+        EffectLibrary.Instance.SpawnEffect(EffectType.LevelUpLight,core.transform.position, Quaternion.identity, null, 1);
         Debug.Log($"[BUFF] 光攻撃強化 → LightPower = {core.attackStats.LightPower}");
     }
 
@@ -159,6 +160,7 @@ public class PlayerExpCollector : MonoBehaviour
     {
         ApplyDarkGrowthRaw();
         SoundManager.Instance.PlaySE("LevelUpDark");
+        EffectLibrary.Instance.SpawnEffect(EffectType.LevelUpDark,core.transform.position, Quaternion.identity, null, 1);
         Debug.Log($"[BUFF] 闇攻撃強化 → DarkPower = {core.attackStats.DarkPower}");
     }
 }
