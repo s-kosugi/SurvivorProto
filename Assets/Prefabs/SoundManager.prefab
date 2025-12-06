@@ -352,6 +352,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 92974bc8f3d83c343b5718b9aa6e43db, type: 3}
     baseVolume: 1
     maxSimultaneous: 2
+  - key: TentacleAttack
+    clip: {fileID: 8300000, guid: c7dbfaffb2f080141b1c43266b3202cb, type: 3}
+    baseVolume: 1
+    maxSimultaneous: 3
   bgmList:
   - key: Stage1
     clip: {fileID: 8300000, guid: 8320edfa1068b7642ac4e1d37b3509bb, type: 3}

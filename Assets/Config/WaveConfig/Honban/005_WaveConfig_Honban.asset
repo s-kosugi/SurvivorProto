@@ -22,3 +22,6 @@ MonoBehaviour:
   - enemyId: 3
     count: 2
     interval: 0.8
+  - enemyId: 2
+    count: 2
+    interval: 0.8
